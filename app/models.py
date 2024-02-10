@@ -1,31 +1,21 @@
 from django.db import models
-
-class SampleModel(models.Model):
-    # CharField for a short text field
-    name = models.CharField(max_length=100)
-
-    # IntegerField for an integer field
-    age = models.IntegerField()
-
-    # EmailField for storing email addresses
-    email = models.EmailField()
-
-    # DateField for a date
-    birthdate = models.DateField()
-
-    # BooleanField for a boolean value
-    is_active = models.BooleanField(default=True)
-
-    # TextField for a longer text field
-    description = models.TextField(blank=True, null=True)
-
-    # DateTimeField for date and time
-    created_at = models.DateTimeField(auto_now_add=True)
+from django.contrib.auth.models import AbstractUser
+import bcrypt
+from django.utils import timezone
 
 
-    def __str__(self):
-        return self.name
+# Create your models here.
+class User(AbstractUser):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    email = models.CharField(max_length=255, unique=True)
+    password = models.CharField(max_length=255)
+    account_created = models.DateTimeField(auto_now_add=True)
+    account_updated = models.DateTimeField(auto_now_add=True)
+    username = None
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["first_name", "last_name", "password"]
 
     class Meta:
-        # Specify the table name for the model
-        db_table = 'user_model'
+        db_table = "users_model"

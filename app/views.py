@@ -7,14 +7,14 @@ import bcrypt
 from django.contrib.auth import authenticate
 from rest_framework.authentication import BaseAuthentication
 import base64
-from django.utils import timezone
+import datetime
 
 
 # Create your views here.
 class RegisterView(APIView):
     def post(self, request):
         if request.query_params:
-            return Response({"error": "Query parameters not allowed"}, status=405)
+            return Response({"error": "Query parameters not allowed"})
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -87,21 +87,25 @@ class LoginView(APIView):
             data = request.data
 
             allowed_fields = ["first_name", "last_name", "password"]
-            for field in data.keys():
+            for field in allowed_fields:
+                if field in data and not data[field].strip():
+                    return Response({"error": f"{field} cannot be blank"}, status=400)
+
+            for field in data:
                 if field not in allowed_fields:
                     return Response({"error": "Bad Request"}, status=400)
 
-            # Update user details
-            if "first_name" in data:
-                user.first_name = data["first_name"]
-            if "last_name" in data:
-                user.last_name = data["last_name"]
-            if "password" in data:
-                user.password = bcrypt.hashpw(
-                    data["password"].encode("utf-8"), bcrypt.gensalt()
-                ).decode("utf-8")
+                if field == "first_name":
+                    user.first_name = data["first_name"]
+                elif field == "last_name":
+                    user.last_name = data["last_name"]
+                elif field == "password":
+                    hashed_password = bcrypt.hashpw(
+                        data["password"].encode("utf-8"), bcrypt.gensalt()
+                    )
+                    user.password = hashed_password.decode("utf-8")
 
-            user.account_updated = timezone.now()
+            user.account_updated = datetime.datetime.now()
             user.save()
             return Response({"message": "User details updated successfully!"})
         else:

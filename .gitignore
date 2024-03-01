@@ -10,7 +10,9 @@ config.ini
 app/migrations/
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
-
+vverse/
+app/__pycache__
+*.pyc
 # Runtime data
 pids
 *.pid

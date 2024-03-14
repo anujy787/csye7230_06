@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import './Login.css'
 
 const Login = () => {
 
@@ -12,15 +13,35 @@ const Login = () => {
     
   }
   return (
-    <div className='login'>
-        <h1>Login</h1>
-        <h2>{error}</h2>
-        <input type="text" placeholder='ID' onChange={handleChange} name='id' required/>
-        <input type="password" placeholder='Password' onChange={handleChange} name='password' required/>
-        <button onClick={()=>handleLogin()}>Login</button>
-        <p><Link to="/register">Are you a new explorer?</Link></p>
+    <div className="login-container">
+      <h1 className="login-header">Login</h1>
+      <h2 className="login-error">{error}</h2>
+      <div className="login-form">
+        <input
+          type="text"
+          placeholder="ID"
+          onChange={handleChange}
+          name="id"
+          required
+          className="login-input"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          onChange={handleChange}
+          name="password"
+          required
+          className="login-input"
+        />
+        <button onClick={() => handleLogin()} className="login-button">
+          Login
+        </button>
+      </div>
+      <p className="login-link">
+        <Link to="/register">Are you a new explorer?</Link>
+      </p>
     </div>
-  )
+  );
 }
 
 export default Login

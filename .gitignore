@@ -7,7 +7,13 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 config.ini
+/virtualVerse
+/app/migrations
+/app/__pycache__/
+/venture_verse/__pycache__/config.ini
+*/__pycache__/*
 app/migrations/
+healthz/migrations/
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 

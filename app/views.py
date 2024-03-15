@@ -9,6 +9,15 @@ from rest_framework.authentication import BaseAuthentication
 import base64
 from django.utils import timezone
 
+from .models import TravelPlan, Rating
+from .serializers import TravelPlanSerializer, RatingSerializer
+
+from django.core.mail import send_mail
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
 
 # Create your views here.
 class RegisterView(APIView):
@@ -109,3 +118,80 @@ class LoginView(APIView):
 
     def options(self, request, *args, **kwargs):
         return Response(status=405, headers={"Allow": "GET"})
+
+
+
+class TravelPlanViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TravelPlanSerializer
+
+    def get_queryset(self):
+        return TravelPlan.objects.filter(participants=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+class RatingViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = RatingSerializer
+
+    def get_queryset(self):
+        return Rating.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class TravelPlanViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TravelPlanSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return TravelPlan.objects.filter(
+            models.Q(participants=user) | models.Q(created_by=user)
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def join(self, request, pk=None):
+        travel_plan = self.get_object()
+        if request.user not in travel_plan.participants.all() and request.user not in travel_plan.pending_list.all():
+            travel_plan.pending_list.add(request.user)
+            return Response({'message': 'You have been added to the pending list.'}, status=status.HTTP_200_OK)
+        return Response({'message': 'You are already a participant or in the pending list.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'])
+    def approve(self, request, pk=None):
+        travel_plan = self.get_object()
+        if travel_plan.created_by == request.user:
+            pending_users = travel_plan.pending_list.all()
+            for user in pending_users:
+                travel_plan.participants.add(user)
+                travel_plan.pending_list.remove(user)
+                send_email_notification(user, travel_plan)
+            return Response({'message': 'Users have been approved and added to participants.'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Only the creator can approve users.'}, status=status.HTTP_403_FORBIDDEN)
+
+    def update(self, request, *args, **kwargs):
+        travel_plan = self.get_object()
+        if travel_plan.created_by == request.user:
+            serializer = self.get_serializer(travel_plan, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+        return Response({'message': 'Only the creator can update the travel plan.'}, status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        travel_plan = self.get_object()
+        if travel_plan.created_by == request.user:
+            travel_plan.delete()
+            return Response({'message': 'Travel plan deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Only the creator can delete the travel plan.'}, status=status.HTTP_403_FORBIDDEN)
+
+def send_email_notification(user, travel_plan):
+    subject = f'You have been added to the travel plan "{travel_plan.name}"'
+    message = f'Congratulations! You have been added as a participant to the travel plan "{travel_plan.name}".'
+    from_email = 'noreply@travelapp.com'
+    send_mail(subject, message, from_email, [user.email], fail_silently=False)

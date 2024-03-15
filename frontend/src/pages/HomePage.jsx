@@ -4,9 +4,8 @@ import axios from 'axios'
 const HomePage = () => {
     const handleHealthCheck = async() => {
         try {
-            const response = await fetch('http://localhost:8000/healthz')
-            const data = await response.json()
-            console.log(data)
+            const response = await fetch('http://localhost:8000/healthz/')
+            console.log(response.status)
         } catch (error) {
             console.log(error)
         }

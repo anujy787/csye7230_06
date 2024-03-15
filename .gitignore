@@ -1,4 +1,12 @@
 # Logs
+*__pycache__*
+*migrations*
+Pipfile*
+*.log
+*.ini
+.DS_Store
+frontend/node_modules
+
 logs
 *.log
 npm-debug.log*

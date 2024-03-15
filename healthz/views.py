@@ -7,8 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 class HealthzView(View):
 
-    @method_decorator(never_cache)
-    @method_decorator(csrf_exempt)
+    # @method_decorator(never_cache)
+    # @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         if request.method == "GET" and not request.body and not request.GET:
             return HttpResponse(status=200)

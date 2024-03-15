@@ -1,15 +1,49 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import './Login.css'
+
 
 const Login = () => {
 
-  const [error, setError] = React.useState('')
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const [error, setError] = React.useState('')
+  const [user, setUser] = React.useState({
+    email: '',
+    password: ''
+  })
+
+  const handleLogin = async () => {
+    try{
+      const response = await axios.get('http://localhost:8000/v1/user/self', {
+        auth: {
+          username: user.email,
+          password: user.password
+        }
+      });
+      if(response.status === 200) {
+        navigate("/", { replace: true });
+      }
+      
+      console.log(response)
+    } 
+    catch(err) {
+      alert(err)
+      console.log(err)
+    }
     
   }
-  const handleChange = () => {
+  const handleChange = (e) => {
+    console.log(e.target.value)
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleGoogleLogin = async () => {
     
   }
   return (
@@ -18,10 +52,10 @@ const Login = () => {
       <h2 className="login-error">{error}</h2>
       <div className="login-form">
         <input
-          type="text"
-          placeholder="ID"
+          type="email"
+          placeholder="Email"
           onChange={handleChange}
-          name="id"
+          name="email"
           required
           className="login-input"
         />
@@ -35,6 +69,9 @@ const Login = () => {
         />
         <button onClick={() => handleLogin()} className="login-button">
           Login
+        </button>
+        <button onClick={() => handleGoogleLogin()} className="login-button">
+          Sign in with Google
         </button>
       </div>
       <p className="login-link">

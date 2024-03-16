@@ -1,6 +1,5 @@
 from django.utils.cache import add_never_cache_headers
 
-
 class DisableCacheMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response

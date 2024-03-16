@@ -122,3 +122,11 @@ body {
   height: 300px;
 }
 
+.forgot-password a {
+  color: #333;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}

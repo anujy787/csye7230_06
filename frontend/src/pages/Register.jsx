@@ -84,9 +84,15 @@ const Register = () => {
             Submit
           </button>
         </div>
+       
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <p className="register-link">
           <Link to="/login">Already have an account?</Link>
         </p>
+          <p className="contact-link">
+            <Link to="/">Home</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

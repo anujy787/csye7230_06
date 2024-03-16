@@ -7,24 +7,27 @@ const SubscriptionPage = () => {
   const tiers = [
     {
       id: 1,
-      name: 'Basic',
+      name: 'Explorer',
       price: '$0.00',
       features: ['View plans'],
       buttonText: 'Continue',
+      color: 'brown',
     },
     {
       id: 2,
-      name: 'Standard',
+      name: 'Adventurer',
       price: '$9.99',
-      features: ['View Plans', 'Create Plans(Limited to 1 per Month)', 'Edit Plans', 'Delete Plans','Join Plans(Limited to 1 per Month)'],
+      features: ['View Plans', 'Create Plans(1 Plan per month)', 'Edit Plans', 'Delete Plans','Join Plans(Limited to 1 per Month)'],
       buttonText: 'Subscribe',
+      color: 'red',
     },
     {
       id: 3,
-      name: 'Premium',
+      name: 'Voyager',
       price: '$19.99',
       features: ['View Plans', 'Create Plans(Unlimited)', 'Edit Plans', 'Delete Plans','Join Plans(Unlimited)'],
       buttonText: 'Subscribe',
+      color: 'green',
     },
   ];
 
@@ -34,20 +37,26 @@ const SubscriptionPage = () => {
 
   return (
     <div>
-        <div className="header">
-            <h1>Choose Your Subscription Tier</h1>
-        </div>
+      <div className="header">
+        <h1 className="title">Select Your Travel Tier</h1>
+      </div>
       <div className="subscription-tiers">
         {tiers.map(tier => (
           <div key={tier.id} className={`tier ${selectedTier === tier.id ? 'selected' : ''}` } onClick={() => setSelectedTier(tier.id)}>
             <h2>{tier.name}</h2>
-            <p>{tier.price} / month</p>
+            <div className="money-circle" style={{ backgroundColor: tier.color }}>
+              <span className="money-value">{tier.price}</span>
+              <span className="price-details">/month</span> {/* Added price details */}
+            </div>
             <ul>
               {tier.features.map((feature, index) => (
-                <li key={index}>{feature}</li>
+                <li key={index}>
+                  <span className="tick-mark">&#10004;</span> {/* Green tick mark */}
+                  <span className="feature-text">{feature}</span> {/* Feature text */}
+                </li>
               ))}
             </ul>
-              <button onClick={() => handleAction(tier.id)}>{tier.buttonText}</button>
+            <button onClick={() => handleAction(tier.id)}>{tier.buttonText}</button>
           </div>
         ))}
       </div>

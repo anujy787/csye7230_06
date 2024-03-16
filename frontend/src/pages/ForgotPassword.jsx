@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Lottie from 'lottie-react';
 import './ForgotPassword.css';
+import Animation from '../assets/forgot.json';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -27,6 +29,11 @@ const ForgotPassword = () => {
 
   return (
     <div className="page-container">
+         <div className="animation-container">
+        <div style={{ width: '300px', height: '150px' }}>
+          <Lottie animationData={Animation} loop={true} />
+        </div>
+        </div>
       <div className="forgot-password-container">
         <h1 className="forgot-password-header">Forgot Password</h1>
         <p className="forgot-password-message">{message}</p>

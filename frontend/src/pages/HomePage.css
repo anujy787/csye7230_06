@@ -1,111 +1,127 @@
+/* HomePage.css */
+.full-width-image {
+  width: 100vw !important; /* override other width styles */
+  height: 35vh !important; /* maintain aspect ratio */
+  object-fit: cover; /* crop and scale the image to cover the entire container */
+  top: 0;
+  left: 0;
+  z-index: -1; /* position the image behind other elements */
+  margin-top: 200px;
+  overflow: hidden;
+}
+
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 16px;
-    width: 50%; 
-    margin: 0 auto; 
-  }
-  
-  .header-container {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    margin-bottom: 16px;
-  }
-  
-  .header-container button {
-    background-color: #fff; 
-    border: 1px solid #ddd; 
-    border-radius: 4px;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    margin-left: 10px;
-  }
-  
-  .header-container button:hover {
-    background-color: #eee; 
-  }
-  
-  .image-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    z-index: -1;
-    margin-bottom: 16px;
-  }
-  
-  .image-container img {
-    width: 100%;
-    height: auto;
-  }
-  
-  .plan-container {
-    width: 100%; /* Stretch full width for responsive layout */
-    padding: 16px;
-    border-radius: 4px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 16px;
-  }
-  
-  .plan-container h1 {
-    font-size: 24px;
-    font-weight: 500;
-    margin-bottom: 16px;
-  }
-  
-  .plan-container ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .plan-container li {
-    margin-bottom: 16px;
-    border-bottom: 1px solid #ddd; /* Add subtle separation lines */
-    padding-bottom: 8px;
-  }
-  
-  .plan-container li h2 {
-    font-size: 20px;
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-  
-  .plan-container li button {
-    background-color: #007bff; /* Material Design blue */
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 8px; /* Adjust spacing as needed */
-  }
-  
-  .plan-container li button:hover {
-    background-color: #0067cc; /* Lighter blue on hover */
-  }
-  
-  h1 { /* Style global H1 for consistency */
-    font-size: 24px;
-    font-weight: 500;
-    margin-bottom: 16px;
-  }
-  
-  button:not(.header-container button) { /* Target non-header buttons */
-    background-color: #007bff; /* Material Design blue */
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-  }
-  
-  button:not(.header-container button):hover { /* Hover effect for non-header buttons */
-    background-color: #0067cc; /* Lighter blue on hover */
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.header-container {
+  position: absolute;
+  top: 0;
+  right: 0; /* move the header container to the top right */
+  z-index: 1;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.header-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.header-button:hover {
+  background-color: #0067cc;
+}
+
+.image-container {
+  width: 100%; 
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 100%; /* Image spans the full width of its container */
+  height: auto; /* Keeps the aspect ratio of the image */
+  display: block; /* Removes any default inline spacing */
+}
+
+.section {
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.section h1 {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  width: 300px;
+  height: 200px;
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0 16px 16px 0;
+}
+
+.card h2 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.card button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin-top: 25px;
+}
+
+.card button:hover {
+  background-color: #0067cc;
+}
+
+.card:hover {
+  transform: scale(1.05); /* Add scale effect on hover */
+}
+.content-container {
+  background-color: rgba(255, 255, 255, 0.531);
+  padding: 32px;
+  border-radius: 8px;
+  z-index: 1;
+  max-width: auto; /* increase the maximum width */
+ /* or set a fixed width, e.g., 90% of the parent container */
+}

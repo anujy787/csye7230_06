@@ -44,7 +44,7 @@ const Login = () => {
   }
 
   const handleGoogleLogin = async () => {
-    
+
   }
   return (
     <div className="login-container">
@@ -67,12 +67,14 @@ const Login = () => {
           required
           className="login-input"
         />
-        <button onClick={() => handleLogin()} className="login-button">
-          Login
-        </button>
-        <button onClick={() => handleGoogleLogin()} className="login-button">
-          Sign in with Google
-        </button>
+        <div className='button-container'>
+          <button onClick={() => handleLogin()} className="login-button">
+            Login
+          </button>
+          <button onClick={() => handleGoogleLogin()} className="login-button">
+            Sign in with Google
+          </button>
+        </div>
       </div>
       <p className="login-link">
         <Link to="/register">Are you a new explorer?</Link>

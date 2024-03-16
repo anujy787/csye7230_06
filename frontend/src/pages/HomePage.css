@@ -1,0 +1,111 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    width: 50%; 
+    margin: 0 auto; 
+  }
+  
+  .header-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  .header-container button {
+    background-color: #fff; 
+    border: 1px solid #ddd; 
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin-left: 10px;
+  }
+  
+  .header-container button:hover {
+    background-color: #eee; 
+  }
+  
+  .image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -1;
+    margin-bottom: 16px;
+  }
+  
+  .image-container img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .plan-container {
+    width: 100%; /* Stretch full width for responsive layout */
+    padding: 16px;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+  }
+  
+  .plan-container h1 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  
+  .plan-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .plan-container li {
+    margin-bottom: 16px;
+    border-bottom: 1px solid #ddd; /* Add subtle separation lines */
+    padding-bottom: 8px;
+  }
+  
+  .plan-container li h2 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  
+  .plan-container li button {
+    background-color: #007bff; /* Material Design blue */
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px; /* Adjust spacing as needed */
+  }
+  
+  .plan-container li button:hover {
+    background-color: #0067cc; /* Lighter blue on hover */
+  }
+  
+  h1 { /* Style global H1 for consistency */
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  
+  button:not(.header-container button) { /* Target non-header buttons */
+    background-color: #007bff; /* Material Design blue */
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  button:not(.header-container button):hover { /* Hover effect for non-header buttons */
+    background-color: #0067cc; /* Lighter blue on hover */
+  }
+  

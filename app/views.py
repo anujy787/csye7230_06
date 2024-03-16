@@ -10,6 +10,8 @@ import base64
 import datetime
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -27,6 +29,14 @@ class RegisterView(APIView):
     def post(self, request):
         if request.query_params:
             return Response({"error": "Query parameters not allowed"})
+        # import pdb; pdb.set_trace()
+        subject = 'Welcome to VentureVerse'
+        message = f"Hi {request.data['first_name']}, thank you for registering in VentureVerse."
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [request.data['email']]
+        send_mail( subject, message, email_from, recipient_list )
+
+
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()

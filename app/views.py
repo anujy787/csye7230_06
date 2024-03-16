@@ -96,7 +96,7 @@ class LoginView(APIView):
         if user.is_authenticated:
             data = request.data
 
-            allowed_fields = ["first_name", "last_name", "password"]
+            allowed_fields = ["first_name", "last_name", "password", "username"]
             for field in allowed_fields:
                 if field in data and not data[field].strip():
                     return Response({"error": f"{field} cannot be blank"}, status=400)

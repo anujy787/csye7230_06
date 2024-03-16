@@ -16,6 +16,9 @@ class UserSerializer(serializers.ModelSerializer):
             "password",
             "account_created",
             "account_updated",
+            "rating",
+            "is_subscribed",
+            "bio",
         ]
         extra_kwargs = {
             "password": {"write_only": True},

@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
 import os
 from pathlib import Path
 from configparser import ConfigParser
-
 
 
 config = ConfigParser()
@@ -32,7 +32,7 @@ SECRET_KEY = "django-insecure-mpz)l0znw9*dwe+_u-#5547=^s7y2h$xy2ttev_6e=2^56jnb^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 SITE_ID = 3
@@ -46,14 +46,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "app",
     "healthz",
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'corsheaders',
-    'rest_framework',
-    
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "corsheaders",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -65,9 +64,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "app.middleware.DisableCacheMiddleware",
-    'allauth.account.middleware.AccountMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    
+    "allauth.account.middleware.AccountMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "venture_verse.urls"
@@ -170,17 +168,14 @@ REST_FRAMEWORK = {
 }
 
 
-
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/' 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 
 
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000'
-]
+CORS_ORIGIN_WHITELIST = ["http://localhost:3000"]
 
 CORS_ORIGIN_ALLOW_ALL = True

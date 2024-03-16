@@ -13,12 +13,14 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+
 @login_required
 def home(request):
-    return render(request, 'home.html')
+    return render(request, "home.html")
+
 
 def login(request):
-    return render(request, 'login.html')
+    return render(request, "login.html")
 
 
 class RegisterView(APIView):
@@ -109,6 +111,8 @@ class LoginView(APIView):
                     user.first_name = data["first_name"]
                 elif field == "last_name":
                     user.last_name = data["last_name"]
+                elif field == "username":
+                    user.username = data["username"]
                 elif field == "password":
                     hashed_password = bcrypt.hashpw(
                         data["password"].encode("utf-8"), bcrypt.gensalt()

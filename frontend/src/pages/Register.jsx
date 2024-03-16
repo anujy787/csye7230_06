@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import Animation from '../assets/camera.json';
+import {GoogleLogin} from 'react-google-login';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -15,6 +16,16 @@ const Register = () => {
     last_name: '',
     password: ''
   });
+
+  const responseGoogle = async (response) => {
+    try {
+      const res = await axios.post('http://localhost:8000/accounts/google/login/', { access_token: response.accessToken });
+      navigate("/", { replace: true });
+      console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleInputChange = (e) => {
     console.log(e.target.value);
@@ -83,6 +94,13 @@ const Register = () => {
           <button onClick={() => handleSubmit()} className="register-button">
             Submit
           </button>
+          <GoogleLogin
+            clientId="9372210714-g8l3veaqop8sqsnauicudvi2i64pm482.apps.googleusercontent.com"
+            buttonText="Login with Google"
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+            cookiePolicy={'single_host_origin'}
+        />
         </div>
         <p className="register-link">
           <Link to="/login">Already have an account?</Link>

@@ -10,7 +10,7 @@ const ForgotPassword = () => {
   const handleResetPassword = async () => {
     try {
       // Send reset password request to the server
-      const response = await axios.post('http://localhost:8000/v1/user/reset-password', {
+      const response = await axios.put('http://localhost:8000/v1/user/self', {
         email: email
       });
       if (response.status === 200) {

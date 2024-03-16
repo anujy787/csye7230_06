@@ -11,7 +11,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+from configparser import ConfigParser
 
+
+
+config = ConfigParser()
+config.read("/home/csye6225/config.ini")
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -88,11 +93,18 @@ WSGI_APPLICATION = "venture_verse.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-db_name = os.environ.get("MYSQL_DATABASE")
-db_user = os.environ.get("MYSQL_USER")
-db_password = os.environ.get("MYSQL_PASSWORD")
-
+config_file_path = "config.ini"
+if os.path.exists(config_file_path):
+    config.read(config_file_path)
+    db_name = config.get("database", "MYSQL_DATABASE")
+    db_user = config.get("database", "MYSQL_USER")
+    db_password = config.get("database", "MYSQL_PASSWORD")
+    db_host = config.get("database", "MYSQL_HOST").strip('"')
+else:
+    db_name = os.environ.get("MYSQL_DATABASE")
+    db_user = os.environ.get("MYSQL_USER")
+    db_password = os.environ.get("MYSQL_PASSWORD")
+    db_host = os.environ.get("MYSQL_HOST", "127.0.0.1")
 
 DATABASES = {
     "default": {
@@ -100,8 +112,8 @@ DATABASES = {
         "NAME": db_name,
         "USER": db_user,
         "PASSWORD": db_password,
-        "HOST": "127.0.0.1",
-        "PORT": "3306",
+        "HOST": db_host,
+        "PORT": 3306,
     }
 }
 

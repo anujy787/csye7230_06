@@ -9,12 +9,9 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
-from configparser import ConfigParser
 
-config = ConfigParser()
-config.read("config.ini")
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -92,15 +89,19 @@ WSGI_APPLICATION = "venture_verse.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+db_name = os.environ.get("MYSQL_DATABASE")
+db_user = os.environ.get("MYSQL_USER")
+db_password = os.environ.get("MYSQL_PASSWORD")
+
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": config.get("database", "database"),
-        "USER": config.get("database", "user"),
-        "PASSWORD": config.get("database", "password"),
-        "HOST": config.get("database", "host"),
-        "PORT": config.get("database", "port"),
+        "NAME": db_name,
+        "USER": db_user,
+        "PASSWORD": db_password,
+        "HOST": "127.0.0.1",
+        "PORT": "3306",
     }
 }
 

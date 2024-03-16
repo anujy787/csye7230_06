@@ -7,6 +7,7 @@ import Register from '../pages/Register';
 import UserProfile from '../pages/UserProfile';
 import Subscription from '../pages/Subscription';
 import ForgotPassword from '../pages/ForgotPassword';
+import ContactUs from '../pages/ContactUs';
 
 
 const RedirectComponent = () => {
@@ -27,6 +28,7 @@ const RedirectComponent = () => {
             <Route path="/subscription" element={<Subscription/>}/> 
             <Route path="/user-profile" element={<UserProfile/>}/>
             <Route path="/forgot-password" element={<ForgotPassword/>}/>
+            <Route path="/contactus" element={<ContactUs/>}/>
         </Routes>
     );
 }

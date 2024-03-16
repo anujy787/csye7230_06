@@ -85,9 +85,15 @@ const Login = () => {
         <p className="login-link">
           <Link to="/register">Are you a new explorer?</Link>
         </p>
-        <p className="forgot-pasword">
-          <Link to="/forgot-password">Forgot Password</Link>
-        </p>
+        
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <p className="forgot-password">
+            <Link to="/forgot-password">Forgot Password</Link>
+          </p>
+          <p className="contact-link">
+            <Link to="/">Home</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

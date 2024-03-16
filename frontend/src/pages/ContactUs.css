@@ -7,7 +7,7 @@ body {
     align-items: center;
     background: linear-gradient(to bottom right, #22a6b3, #6946c6, #cf23cf, #ff6f69, #ff9d2f, #ffe02e, #89ff2e, #2effb9);
     background-size: 800% 800%;
-    animation: flowingGradient 30s ease-in-out infinite;
+    animation: flowingGradient 50s ease-in-out infinite;
   }
   
   .contact-container {

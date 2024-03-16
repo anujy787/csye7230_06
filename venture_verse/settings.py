@@ -16,7 +16,7 @@ from configparser import ConfigParser
 
 
 config = ConfigParser()
-config.read("/home/csye6225/config.ini")
+config.read("config.ini")
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

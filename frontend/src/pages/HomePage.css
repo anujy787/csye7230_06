@@ -85,7 +85,7 @@
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 0 16px 16px 0;
+  margin: 10px 30px 30px 10px;
 }
 
 .card h2 {
@@ -122,6 +122,6 @@
   padding: 32px;
   border-radius: 8px;
   z-index: 1;
-  max-width: auto; /* increase the maximum width */
+  width: 80%; /* increase the maximum width */
  /* or set a fixed width, e.g., 90% of the parent container */
 }

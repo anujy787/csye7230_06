@@ -56,8 +56,19 @@ const HomePage = () => {
             "id": 10,
             "title": "Hiking the Swiss Alps",
             "description": "Adventure through stunning peaks, lush valleys, and picturesque Swiss villages."
+        },
+        {
+            "id": 11,
+            "title": "Beaches of Bali",
+            "description": "Unwind on the idyllic beaches of Bali, enjoy the serene beauty, and explore rich cultural heritage."
+        },
+        {
+            "id": 12,
+            "title": "Road Trip Across New Zealand",
+            "description": "Embark on a scenic road trip across New Zealand, from the rolling hills of Hobbiton to the majestic fjords of Milford Sound."
         }
     ]
+    
     );
 
     const handleHealthCheck = async () => {
@@ -97,7 +108,7 @@ const HomePage = () => {
             <div className="section">
                 <h1 style={{ textAlign: 'center', fontWeight:'bold' }}>Travel Plans</h1>
                 <div className="card-container">
-                    {plans.slice(0, 3).map((plan) => (
+                    {plans.slice(0, 4).map((plan) => (
                         <div key={plan.id} className="card">
                             <h2>{plan.title}</h2>
                             <p>{plan.description}</p>
@@ -110,7 +121,7 @@ const HomePage = () => {
             <div className="section">
                 <h1 style={{ textAlign: 'center', fontWeight:'bold'  }}>Created Plans</h1>
                 <div className="card-container">
-                    {plans.slice(3, 6).map((plan) => (
+                    {plans.slice(4, 8).map((plan) => (
                         <div key={plan.id} className="card">
                             <h2>{plan.title}</h2>
                             <p>{plan.description}</p>
@@ -123,7 +134,7 @@ const HomePage = () => {
             <div className="section">
                 <h1 style={{ textAlign: 'center', fontWeight:'bold'  }} >Joined Plans</h1>
                 <div className="card-container">
-                    {plans.slice(6, 9).map((plan) => (
+                    {plans.slice(8, 12).map((plan) => (
                         <div key={plan.id} className="card">
                             <h2>{plan.title}</h2>
                             <p>{plan.description}</p>

@@ -6,6 +6,7 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import UserProfile from '../pages/UserProfile';
 import Subscription from '../pages/Subscription';
+import ForgotPassword from '../pages/ForgotPassword';
 
 
 const RedirectComponent = () => {
@@ -25,6 +26,7 @@ const RedirectComponent = () => {
             <Route path="/register" element={<Register/>}/>
             <Route path="/subscription" element={<Subscription/>}/> 
             <Route path="/user-profile" element={<UserProfile/>}/>
+            <Route path="/forgot-password" element={<ForgotPassword/>}/>
         </Routes>
     );
 }

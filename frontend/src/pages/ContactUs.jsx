@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import Animation from '../assets/compass.json';
 import './ContactUs.css';
+import Map from '../components/map/maps';
 
 const ContactUs = () => {
   return (
@@ -27,29 +28,29 @@ const ContactUs = () => {
         <div className="form-section">
           <h2>Send Us a Message</h2>
           <form>
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Name"
-              required
-              className="contact-input"
-            />
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="Name"
+                required
+                className="contact-input"
+              />
             </div>
             <div className="form-group">
-            <input
-              type="email"
-              placeholder="Email"
-              required
-              className="contact-input"
-            />
+              <input
+                type="email"
+                placeholder="Email"
+                required
+                className="contact-input"
+              />
             </div>
             <div className="form-group">
-            <textarea
-              placeholder="Message"
-              rows="5"
-              required
-              className="contact-input"
-            ></textarea>
+              <textarea
+                placeholder="Message"
+                rows="5"
+                required
+                className="contact-input"
+              ></textarea>
             </div>
             <button type="submit" className="contact-button">
               Submit

@@ -1,10 +1,10 @@
-import {BrowserRouter} from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 // import Routes from './Routes';
 import RedirectComponent from './routes/RedirectComponent';
 
 function App() {
   return (
-    <div className="App">
+    <div className="w-full h-full">
       <BrowserRouter>
         <RedirectComponent />
       </BrowserRouter>

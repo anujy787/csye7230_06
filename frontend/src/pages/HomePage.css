@@ -1,13 +1,11 @@
 /* HomePage.css */
 .full-width-image {
-  width: 100vw !important; /* override other width styles */
-  height: 35vh !important; /* maintain aspect ratio */
-  object-fit: cover; /* crop and scale the image to cover the entire container */
+  width: 100vw !important; 
+  height: 30vh !important;
+  object-fit: cover; 
   top: 0;
   left: 0;
-  z-index: -1; /* position the image behind other elements */
-  margin-top: 200px;
-  overflow: hidden;
+  margin-top: 5%;
 }
 
 .container {
@@ -52,7 +50,7 @@
 .image-container {
   width: 100%; 
   margin-bottom: 16px;
-  overflow: hidden;
+  /* //overflow: hidden; */
 }
 
 .image-container img {
@@ -122,6 +120,7 @@
   padding: 32px;
   border-radius: 8px;
   z-index: 1;
-  width: 80%; /* increase the maximum width */
- /* or set a fixed width, e.g., 90% of the parent container */
+  width: 90%;
+  height: 70vh;
+  overflow-y: auto;
 }

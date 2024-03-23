@@ -112,7 +112,8 @@ const HomePage = () => {
                         <div key={plan.id} className="card">
                             <h2>{plan.title}</h2>
                             <p>{plan.description}</p>
-                            <button onClick={() => handlePlanJoin(plan.id)}>Join Now</button>
+                            {/* <button onClick={() => handlePlanJoin(plan.id)}>Join Now</button> */}
+                            <button onClick={() => navigate('/login')}>Join Now</button>
                         </div>
                     ))}
                 </div>
@@ -125,7 +126,8 @@ const HomePage = () => {
                         <div key={plan.id} className="card">
                             <h2>{plan.title}</h2>
                             <p>{plan.description}</p>
-                            <button onClick={() => handlePlanView(plan.id)}>View Plans</button>
+                            {/* <button onClick={() => handlePlanView(plan.id)}>View Plans</button> */}
+                            <button onClick={() => navigate('/login')}>View Plans</button>
                         </div>
                     ))}
                 </div>
@@ -138,7 +140,8 @@ const HomePage = () => {
                         <div key={plan.id} className="card">
                             <h2>{plan.title}</h2>
                             <p>{plan.description}</p>
-                            <button onClick={() => handlePlanView(plan.id)}>View Plans</button>
+                            {/* <button onClick={() => handlePlanView(plan.id)}>View Plans</button> */}
+                            <button onClick={() => navigate('/login')}>View Plans</button>
                         </div>
                     ))}
                 </div>

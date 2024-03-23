@@ -8,6 +8,7 @@ body {
   background: linear-gradient(to bottom right,#22a6b3,  #6946c6,#cf23cf,#ff6f69, #ff9d2f,   #ffe02e,   #89ff2e,  #2effb9 );
   background-size: 800% 800%;
   animation: flowingGradient 50s ease-in-out infinite;
+  overflow: hidden;
 }
 
 .login-container {
@@ -59,7 +60,7 @@ body {
 
 .login-link {
   margin-top: 1rem;
-}
+} 
 
 .login-link a {
   color: #333;
@@ -112,7 +113,8 @@ body {
   justify-content: center;
   align-items: center;
   max-height: 100vh;
-  /* padding-bottom: 20rem; */
+  padding-bottom: 20rem;
+  margin-top:200px
 }
 .animation-container {
   margin-bottom: 2rem;

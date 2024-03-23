@@ -1,21 +1,10 @@
-body {
-  font-family: Arial, sans-serif;
-  height: 100vh;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(to bottom right, #223db3,#22a6b3,  #6946c6,#cf23cf,#ff6f69, #ff9d2f,   #ffe02e,   #89ff2e,  #2effb9 ,  #0f67afdd );
-  background-size: 800% 800%;
-  animation: flowingGradient 50s ease-in-out infinite;
-}
-
 .page-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   max-height: 100vh;
+  margin-top:250px
 }
 
 .animation-container {

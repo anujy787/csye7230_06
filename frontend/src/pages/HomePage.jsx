@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
     const navigate = useNavigate();
-    const [plans, setPlans] = useState([
+    const [plans] = useState([
         {
             "id": 1,
             "title": "Discover Paris",
@@ -108,7 +108,7 @@ const HomePage = () => {
             <div className="section">
                 <h1 style={{ textAlign: 'center', fontWeight:'bold' }}>Travel Plans</h1>
                 <div className="card-container">
-                    {plans.slice(0, 4).map((plan) => (
+                    {plans.slice(0, 6).map((plan) => (
                         <div key={plan.id} className="card">
                             <h2>{plan.title}</h2>
                             <p>{plan.description}</p>
@@ -121,7 +121,7 @@ const HomePage = () => {
             <div className="section">
                 <h1 style={{ textAlign: 'center', fontWeight:'bold'  }}>Created Plans</h1>
                 <div className="card-container">
-                    {plans.slice(4, 8).map((plan) => (
+                    {plans.slice(6, 9).map((plan) => (
                         <div key={plan.id} className="card">
                             <h2>{plan.title}</h2>
                             <p>{plan.description}</p>
@@ -134,7 +134,7 @@ const HomePage = () => {
             <div className="section">
                 <h1 style={{ textAlign: 'center', fontWeight:'bold'  }} >Joined Plans</h1>
                 <div className="card-container">
-                    {plans.slice(8, 12).map((plan) => (
+                    {plans.slice(9, 12).map((plan) => (
                         <div key={plan.id} className="card">
                             <h2>{plan.title}</h2>
                             <p>{plan.description}</p>

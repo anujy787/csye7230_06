@@ -12,6 +12,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.mail import send_mail
+import re
 
 # Create your views here.
 
@@ -57,7 +58,6 @@ class RegisterView(APIView):
 
 class BasicAuthHeaderAuthentication(BaseAuthentication):
     def authenticate(self, request):
-
         auth_header = request.headers.get("Authorization")
         if not auth_header or not auth_header.startswith("Basic "):
             return None
@@ -69,11 +69,16 @@ class BasicAuthHeaderAuthentication(BaseAuthentication):
         except (UnicodeDecodeError, ValueError):
             return None
 
-        return self.authenticate_credentials(request, username, password)
+        return self.authenticate_credentials( username, password)
 
-    def authenticate_credentials(self, request, username, password):
+    def authenticate_credentials(self, username, password):
 
-        user = User.objects.filter(email=username).first()
+        if re.match(r"[^@]+@[^@]+\.[^@]+", username):
+            user = User.objects.filter(email=username).first()
+        else:
+            user = User.objects.filter(username=username).first()
+
+        # user = User.objects.filter(email=username).first()
         if user is None:
             raise AuthenticationFailed("User not found!")
         if not bcrypt.checkpw(password.encode("utf-8"), user.password.encode("utf-8")):

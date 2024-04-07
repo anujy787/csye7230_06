@@ -38,6 +38,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)
     account_created = models.DateTimeField(auto_now_add=True)
     account_updated = models.DateTimeField(auto_now=True)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=5.00)

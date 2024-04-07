@@ -30,12 +30,12 @@ class RegisterView(APIView):
         if request.query_params:
             return Response({"error": "Query parameters not allowed"})
         # import pdb; pdb.set_trace()
-        subject = 'Welcome to VentureVerse'
+        subject = "Welcome to VentureVerse"
         message = f"Hi {request.data['first_name']}, thank you for registering in VentureVerse."
         email_from = settings.EMAIL_HOST_USER
-        recipient_list = [request.data['email']]
-        send_mail( subject, message, email_from, recipient_list )
 
+        recipient_list = [request.data["email"]]
+        send_mail(subject, message, email_from, recipient_list)
 
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

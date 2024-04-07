@@ -40,7 +40,6 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     account_created = models.DateTimeField(auto_now_add=True)
     account_updated = models.DateTimeField(auto_now=True)
-    username = models.CharField(max_length=20, unique=True, null=False)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=5.00)
     is_subscribed = models.BooleanField(default=False)
     bio = models.CharField(max_length=150, blank=True, default="")

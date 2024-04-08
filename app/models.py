@@ -15,7 +15,7 @@ class CustomUserManager(BaseUserManager):
             username=username,
             first_name=first_name,
             last_name=last_name,
-            **extra_fields
+            **extra_fields,
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -52,3 +52,51 @@ class User(AbstractUser):
 
     class Meta:
         db_table = "users_data"
+
+
+class TravelPlan(models.Model):
+    plan_id = models.AutoField(primary_key=True)
+    created_by = models.UUIDField(blank=True)
+    planned_date = models.DateField(null=False)
+    name = models.CharField(max_length=120, null=False)
+    source = models.CharField(max_length=255, blank=True)
+    destination = models.CharField(max_length=255, blank=True)
+    preference = models.TextField(blank=True, null=True)
+    status = models.CharField(
+        max_length=50,
+        default="new",
+        choices=(("planning", "Planning"), ("completed", "Completed"), ("new", "New")),
+    )
+    link_to_map = models.URLField(max_length=500, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "travel_plans"
+
+    def __str__(self):
+        return self.name
+
+
+class Trip(models.Model):
+    plan = models.ForeignKey(
+        "TravelPlan", on_delete=models.CASCADE, related_name="trips"
+    )
+    user = models.ForeignKey(
+        "User", on_delete=models.CASCADE, related_name="user_trips"
+    )
+    status = models.CharField(
+        max_length=50,
+        choices=(
+            ("Approved", "Approved"),
+            ("Not Approved", "Not Approved"),
+            ("Requested", "Requested"),
+        ),
+        default="Requested",
+    )
+
+    class Meta:
+        db_table = "trips"
+
+    def __str__(self):
+        return f"{self.plan.name} - {self.status}"

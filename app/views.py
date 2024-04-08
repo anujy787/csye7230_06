@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer
-from .models import User
+from .serializers import UserSerializer, TravelPlanSerializer
+from .models import User, TravelPlan
 import bcrypt
 from django.contrib.auth import authenticate
 from rest_framework.authentication import BaseAuthentication
@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.mail import send_mail
 import re
+from django.utils.dateparse import parse_datetime
 
 # Create your views here.
 
@@ -69,7 +70,7 @@ class BasicAuthHeaderAuthentication(BaseAuthentication):
         except (UnicodeDecodeError, ValueError):
             return None
 
-        return self.authenticate_credentials( username, password)
+        return self.authenticate_credentials(username, password)
 
     def authenticate_credentials(self, username, password):
 
@@ -139,3 +140,97 @@ class LoginView(APIView):
 
     def options(self, request, *args, **kwargs):
         return Response(status=405, headers={"Allow": "GET"})
+
+
+class TravelPlanCreateView(APIView):
+    authentication_classes = [BasicAuthHeaderAuthentication]
+
+    def post(self, request):
+
+        if request.query_params:
+            return Response({"error": "Query parameters not allowed"}, status=400)
+
+        user = request.user
+
+        if user.is_authenticated:
+
+            plan_data = {
+                "created_by": request.user.id,
+                "planned_date": request.data.get("planned_date"),
+                "name": request.data.get("name"),
+                "source": request.data.get("source"),
+                "destination": request.data.get("destination"),
+                "preference": request.data.get("preference"),
+                "status": request.data.get("status", "new"),
+                "link_to_map": request.data.get("link_to_map"),
+                "created_at": (
+                    parse_datetime(request.data.get("created_at"))
+                    if request.data.get("created_at")
+                    else None
+                ),
+                "updated_at": (
+                    parse_datetime(request.data.get("updated_at"))
+                    if request.data.get("updated_at")
+                    else None
+                ),
+            }
+            serializer = TravelPlanSerializer(data=plan_data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=201)
+            else:
+                return Response(serializer.errors, status=400)
+
+    def handle_bad_request(self):
+        return Response({"error": "Bad Request"}, status=400)
+
+    def get(self, request):
+        return self.handle_bad_request()
+
+    def put(self, request):
+        return self.handle_bad_request()
+
+    def delete(self, request):
+        return self.handle_bad_request()
+
+    def options(self, request, *args, **kwargs):
+        return Response(status=405, headers={"Allow": "GET"})
+
+
+class TravelPlanUpdateView(APIView):
+    authentication_classes = [BasicAuthHeaderAuthentication]
+
+    def get(self, request):
+
+        user = request.user
+
+        if request.query_params:
+            return Response({"error": "Query parameters not allowed"}, status=400)
+
+        if request.data:
+            return Response({"error": "Request body not allowed"}, status=400)
+
+        if user.is_authenticated:
+            plans = TravelPlan.objects.filter(created_by=user.id)
+            serializer = TravelPlanSerializer(plans, many=True)
+            return Response(serializer.data)
+        else:
+            raise AuthenticationFailed("User not authenticated!")
+
+    def put(self, request, pk):
+        try:
+            travel_plan = TravelPlan.objects.get(pk=pk)
+        except TravelPlan.DoesNotExist:
+            return Response(
+                {"error": f"Travel plan with id {pk} does not exist"}, status=404
+            )
+
+        serializer = TravelPlanSerializer(travel_plan, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        else:
+            return Response(serializer.errors, status=400)
+
+    def delete(self, request):
+        pass

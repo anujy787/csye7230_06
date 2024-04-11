@@ -9,7 +9,7 @@ import base64
 import datetime
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
+import os
 
 # from django.core.mail import send_mail
 import re
@@ -36,7 +36,10 @@ class RegisterView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         verification_token = VerificationToken.create_token(user)
-        send_verification_email(request.data.get("email"), verification_token)
+        if os.getenv("CI") == "true":
+            print("Mail Not Sent Since Env is : CI")
+        else:
+            send_verification_email(request.data.get("email"), verification_token)
         return Response(serializer.data, status=201)
 
     def handle_bad_request(self):
@@ -134,7 +137,9 @@ class LoginView(APIView):
 
             user.account_updated = datetime.datetime.now()
             user.save()
-            return Response({"message": "User details updated successfully!"})
+            return Response(
+                {"message": "User details updated successfully!"}, status=204
+            )
         elif user.is_verified == False:
             raise AuthenticationFailed("User not Validated!")
         else:

@@ -9,7 +9,7 @@ const ContactUs = () => {
     <div className="page-container">
       <div className="animation-container">
         <div style={{ width: '250px', height: '250px' }}>
-          <Lottie animationData={Animation} loop={true} />
+          <Lottie animationData={Animation} loop={false} />
         </div>
       </div>
       <div className="contact-container">

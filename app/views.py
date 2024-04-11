@@ -17,7 +17,6 @@ import re
 from django.utils.dateparse import parse_datetime
 
 
-
 # Create your views here.
 
 

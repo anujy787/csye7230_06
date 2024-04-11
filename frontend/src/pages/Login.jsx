@@ -26,6 +26,7 @@ const Login = () => {
         }
       });
       if(response.status === 200) {
+        sessionStorage.setItem('auth', JSON.stringify({ username: user.email, password: user.password }));
         navigate("/", { replace: true });
       }
       

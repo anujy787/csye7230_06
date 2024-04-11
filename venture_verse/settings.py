@@ -193,3 +193,9 @@ EMAIL_USE_SSL = False
 
 
 # you can go in the Applications folder and expand the Python 3.9 folder. Now first run (or double click) the Install Certificates.command and then Update Shell Profile.command
+
+
+if DEBUG:
+    BASE_URL = f"http://localhost:8000"
+else:
+    BASE_URL = "https://anujscloud.me"

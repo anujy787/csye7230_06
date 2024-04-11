@@ -18,10 +18,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from app import urls as app_urls
+from . import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include((app_urls, "cloud"))),
     path("healthz/", include("healthz.urls")),
     path("accounts/", include("allauth.urls")),
+    path("verify/", views.verify_email, name="verify_email"),
 ]

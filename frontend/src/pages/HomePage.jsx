@@ -1,75 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useState } from 'react';
-import './HomePage.css';
 import { useNavigate } from 'react-router-dom';
+import './HomePage.css';
 
 const HomePage = () => {
     const navigate = useNavigate();
-    const [plans] = useState([
-        {
-            "id": 1,
-            "title": "Discover Paris",
-            "description": "Explore the iconic Eiffel Tower, charming Montmartre, and indulge in renowned cuisine and fashion."
-        },
-        {
-            "id": 2,
-            "title": "Adventure in the Amazon",
-            "description": "Journey into the Amazon Rainforest, encounter exotic wildlife, and experience the vibrant ecosystem."
-        },
-        {
-            "id": 3,
-            "title": "Safari in Kenya",
-            "description": "Thrill in the Maasai Mara with the Great Migration, the Big Five, and breathtaking savannahs."
-        },
-        {
-            "id": 4,
-            "title": "Cultural Journey through Japan",
-            "description": "Discover Japan's heritage and modern wonders, from ancient temples to bustling Tokyo."
-        },
-        {
-            "id": 5,
-            "title": "Historical Tour of Rome",
-            "description": "Explore Rome's landmarks, from the Colosseum to the Vatican's ancient art."
-        },
-        {
-            "id": 6,
-            "title": "Island Escape to the Maldives",
-            "description": "Relax in crystal-clear waters, enjoy snorkeling and the vibrant marine life."
-        },
-        {
-            "id": 7,
-            "title": "Explore the Australian Outback",
-            "description": "Discover the Outback's landscapes, Uluru, and unique wildlife and culture."
-        },
-        {
-            "id": 8,
-            "title": "Northern Lights in Iceland",
-            "description": "Experience the Northern Lights, geysers, and the Blue Lagoon's spa in Iceland."
-        },
-        {
-            "id": 9,
-            "title": "Culinary Tour of Mexico",
-            "description": "Savor Mexico's diverse cuisine, from street food in Mexico City to traditional Mayan dishes."
-        },
-        {
-            "id": 10,
-            "title": "Hiking the Swiss Alps",
-            "description": "Adventure through stunning peaks, lush valleys, and picturesque Swiss villages."
-        },
-        {
-            "id": 11,
-            "title": "Beaches of Bali",
-            "description": "Unwind on the idyllic beaches of Bali, enjoy the serene beauty, and explore rich cultural heritage."
-        },
-        {
-            "id": 12,
-            "title": "Road Trip Across New Zealand",
-            "description": "Embark on a scenic road trip across New Zealand, from the rolling hills of Hobbiton to the majestic fjords of Milford Sound."
+    const [plans, setPlans] = useState([]);
+
+  
+    useEffect(() => {
+        fetchAllPlans();
+    }, []);
+
+    const fetchAllPlans = async () => {
+        try {
+            const auth = JSON.parse(sessionStorage.getItem('auth'));
+            if (!auth || !auth.username || !auth.password) {
+                console.error('No authentication credentials found');
+                return;
+            }
+
+            axios.defaults.headers.common['Authorization'] = `Basic ${btoa(`${auth.username}:${auth.password}`)}`;
+
+            const response = await axios.get('http://localhost:8000/v1/allplans/');
+            setPlans(response.data);
+            
+        } catch (error) {
+            console.error('Error fetching plans:', error);
         }
-    ]
-    
-    );
+    };
 
     const handleHealthCheck = async () => {
         try {
@@ -78,7 +37,7 @@ const HomePage = () => {
             console.log(response.status);
         } catch (error) {
             alert('Not Healthy ❌');
-            console.log(error);
+            console.error('Error checking server health:', error);
         }
     };
 
@@ -100,54 +59,26 @@ const HomePage = () => {
                         <button className="header-button" onClick={() => navigate('/contactus')}>Contact Us</button>
                     </div>
                 </header>
-        </div>
-        <div className="image-container">
-            <img src={require('../assets/vverse-logo.png')} alt="VVerse Logo" className="full-width-image" />
-        </div>
+            </div>
+            <div className="image-container">
+                <img src={require('../assets/vverse-logo.png')} alt="VVerse Logo" className="full-width-image" />
+            </div>
             <div className="content-container">
-            <div className="section">
-                <h1 style={{ textAlign: 'center', fontWeight:'bold' }}>Travel Plans</h1>
-                <div className="card-container">
-                    {plans.slice(0, 6).map((plan) => (
-                        <div key={plan.id} className="card">
-                            <h2>{plan.title}</h2>
-                            <p>{plan.description}</p>
-                            {/* <button onClick={() => handlePlanJoin(plan.id)}>Join Now</button> */}
-                            <button onClick={() => navigate('/login')}>Join Now</button>
-                        </div>
-                    ))}
+                <div className="section">
+                    <h1 style={{ textAlign: 'center', fontWeight:'bold' }}>All Plans</h1>
+                    <div className="card-container">
+                        {plans.map((plan, index) => (
+                            <div key={index} className="card">
+                                <h2>{plan.name}</h2>
+                                <p><strong>Source:</strong> {plan.source}</p>
+                                <p><strong>Destination:</strong> {plan.destination}</p>
+                                <button onClick={() => handlePlanJoin(plan.id)}>Join Now</button>
+                                <button onClick={() => handlePlanView(plan.id)}>View Plans</button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
-
-            <div className="section">
-                <h1 style={{ textAlign: 'center', fontWeight:'bold'  }}>Created Plans</h1>
-                <div className="card-container">
-                    {plans.slice(6, 9).map((plan) => (
-                        <div key={plan.id} className="card">
-                            <h2>{plan.title}</h2>
-                            <p>{plan.description}</p>
-                            {/* <button onClick={() => handlePlanView(plan.id)}>View Plans</button> */}
-                            <button onClick={() => navigate('/login')}>View Plans</button>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <div className="section">
-                <h1 style={{ textAlign: 'center', fontWeight:'bold'  }} >Joined Plans</h1>
-                <div className="card-container">
-                    {plans.slice(9, 12).map((plan) => (
-                        <div key={plan.id} className="card">
-                            <h2>{plan.title}</h2>
-                            <p>{plan.description}</p>
-                            {/* <button onClick={() => handlePlanView(plan.id)}>View Plans</button> */}
-                            <button onClick={() => navigate('/login')}>View Plans</button>
-                        </div>
-                    ))}
-                </div>
-            </div>
-            </div>
-
             <button onClick={handleHealthCheck}>Server Health Check</button>
         </div>
     );

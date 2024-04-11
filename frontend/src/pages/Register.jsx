@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Register.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -8,8 +8,13 @@ import Animation from '../assets/camera.json';
 
 const Register = () => {
   const navigate = useNavigate();
-
-  const [user, setUser] = React.useState({
+  const [errors, setErrors] = useState({
+    email: '',
+    first_name: '',
+    last_name: '',
+    password: ''
+  });
+  const [user, setUser] = useState({
     email: '',
     first_name: '',
     last_name: '',
@@ -17,10 +22,16 @@ const Register = () => {
   });
 
   const handleInputChange = (e) => {
-    console.log(e.target.value);
+    const { name, value } = e.target;
     setUser({
       ...user,
-      [e.target.name]: e.target.value
+      [name]: value
+    });
+
+    // Clear errors for the field being updated
+    setErrors({
+      ...errors,
+      [name]: ''
     });
   };
 
@@ -30,11 +41,19 @@ const Register = () => {
       if (response.status === 201) {
         navigate("/", { replace: true });
       }
-      console.log(response);
     } catch (error) {
-      alert(error);
+      if (error.response) {
+        const { data } = error.response;
+        setErrors({
+          email: data.email ? data.email[0] : '',
+          first_name: data.first_name ? data.first_name[0] : '',
+          last_name: data.last_name ? data.last_name[0] : '',
+          password: data.password ? data.password[0] : ''
+        });
+      } else {
+        alert('An error occurred while processing your request.')
+      }
     }
-    console.log(user);
   };
 
   return (
@@ -55,6 +74,7 @@ const Register = () => {
             required
             className="register-input"
           />
+          {errors.email && <div className="error-popup" style={{ color: 'red' }}>{errors.email}</div>}
           <input
             type="text"
             placeholder="First Name"
@@ -63,6 +83,7 @@ const Register = () => {
             required
             className="register-input"
           />
+          {errors.first_name && <div className="error-popup" style={{ color: 'red' }}>{errors.first_name}</div>}
           <input
             type="text"
             placeholder="Last Name"
@@ -71,6 +92,7 @@ const Register = () => {
             required
             className="register-input"
           />
+          {errors.last_name && <div className="error-popup" style={{ color: 'red' }}>{errors.last_name}</div>}
           <input
             type="password"
             placeholder="Password"
@@ -79,16 +101,16 @@ const Register = () => {
             required
             className="register-input"
           />
+          {errors.password && <div className="error-popup" style={{ color: 'red' }}>{errors.password}</div>}
           <br />
-          <button onClick={() => handleSubmit()} className="register-button">
+          <button onClick={handleSubmit} className="register-button">
             Submit
           </button>
         </div>
-       
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <p className="register-link">
-          <Link to="/login">Already have an account?</Link>
-        </p>
+          <p className="register-link">
+            <Link to="/login">Already have an account?</Link>
+          </p>
           <p className="contact-link">
             <Link to="/">Home</Link>
           </p>

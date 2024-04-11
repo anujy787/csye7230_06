@@ -15,7 +15,7 @@ from django.conf import settings
 # from django.core.mail import send_mail
 import re
 from django.utils.dateparse import parse_datetime
-from mailing import send_verification_email
+
 
 
 # Create your views here.
@@ -42,7 +42,6 @@ class RegisterView(APIView):
             print("Mail Not Sent Since Env is : CI")
         else:
             from mailing import send_verification_email
-
             send_verification_email(request.data.get("email"), verification_token)
         return Response(serializer.data, status=201)
 

@@ -2,18 +2,19 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer, TravelPlanSerializer
-from .models import User, TravelPlan
+from .models import User, TravelPlan, VerificationToken
 import bcrypt
-from django.contrib.auth import authenticate
 from rest_framework.authentication import BaseAuthentication
 import base64
 import datetime
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.core.mail import send_mail
+
+# from django.core.mail import send_mail
 import re
 from django.utils.dateparse import parse_datetime
+from mailing import send_verification_email
 
 # Create your views here.
 
@@ -31,14 +32,11 @@ class RegisterView(APIView):
     def post(self, request):
         if request.query_params:
             return Response({"error": "Query parameters not allowed"})
-        subject = "Welcome to VentureVerse"
-        message = f"Hi {request.data['first_name']}, thank you for registering in VentureVerse."
-        email_from = settings.EMAIL_HOST_USER
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        recipient_list = [request.data["email"]]
-        send_mail(subject, message, email_from, recipient_list)
+        user = serializer.save()
+        verification_token = VerificationToken.create_token(user)
+        send_verification_email(request.data.get("email"), verification_token)
         return Response(serializer.data, status=201)
 
     def handle_bad_request(self):
@@ -99,16 +97,18 @@ class LoginView(APIView):
         if request.data:
             return Response({"error": "Request body not allowed"}, status=400)
 
-        if user.is_authenticated:
+        if user.is_authenticated and user.is_verified:
             serializer = UserSerializer(user)
             return Response(data=serializer.data)
+        elif user.is_verified == False:
+            raise AuthenticationFailed("User not validated!")
         else:
             raise AuthenticationFailed("User not authenticated!")
 
     def put(self, request):
         user = request.user
 
-        if user.is_authenticated:
+        if user.is_authenticated and user.is_verified:
             data = request.data
 
             allowed_fields = ["first_name", "last_name", "password", "username"]
@@ -135,6 +135,8 @@ class LoginView(APIView):
             user.account_updated = datetime.datetime.now()
             user.save()
             return Response({"message": "User details updated successfully!"})
+        elif user.is_verified == False:
+            raise AuthenticationFailed("User not Validated!")
         else:
             raise AuthenticationFailed("User not authenticated!")
 

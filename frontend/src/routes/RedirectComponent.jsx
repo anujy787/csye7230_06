@@ -8,6 +8,7 @@ import UserProfile from '../pages/UserProfile';
 import Subscription from '../pages/Subscription';
 import ForgotPassword from '../pages/ForgotPassword';
 import ContactUs from '../pages/ContactUs';
+import ViewPlans from '../pages/ViewPlans';
 
 
 const RedirectComponent = () => {
@@ -29,6 +30,7 @@ const RedirectComponent = () => {
             <Route path="/user-profile" element={<UserProfile/>}/>
             <Route path="/forgot-password" element={<ForgotPassword/>}/>
             <Route path="/contactus" element={<ContactUs/>}/>
+            <Route path="/viewplans" element={<ViewPlans/>}/>
         </Routes>
     );
 }

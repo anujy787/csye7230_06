@@ -1,0 +1,73 @@
+.view-plans-container {
+    background-color: #fff;
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 400px;
+  }
+  
+  .view-plans-header {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .plan-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .info-section {
+    text-align: center;
+  }
+  
+  .info-section h2 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .plan-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .plan-detail {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 3px;
+  }
+  
+  .detail-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .view-button {
+    padding: 0.5rem;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .view-button:hover {
+    background-color: #45a049;
+  }
+  
+  .return-link {
+    margin-top: 1rem;
+  }
+  
+  .return-link a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .return-link a:hover {
+    text-decoration: underline;
+  }
+  

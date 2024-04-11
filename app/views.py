@@ -10,10 +10,12 @@ import datetime
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 import os
+from django.conf import settings
 
 # from django.core.mail import send_mail
 import re
 from django.utils.dateparse import parse_datetime
+from mailing import send_verification_email
 
 
 # Create your views here.

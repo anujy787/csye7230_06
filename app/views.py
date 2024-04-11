@@ -242,3 +242,34 @@ class TravelPlanUpdateView(APIView):
 
     def delete(self, request):
         pass
+
+class AllTravelPlansView(APIView):
+    authentication_classes = [BasicAuthHeaderAuthentication]
+
+    def get(self, request):
+        user = request.user
+
+        if request.query_params:
+            return Response({"error": "Query parameters not allowed"}, status=400)
+
+        if user.is_authenticated:
+            plans = TravelPlan.objects.all()
+            serializer = TravelPlanSerializer(plans, many=True)
+            return Response(serializer.data)
+        else:
+            raise AuthenticationFailed("User not authenticated!")
+
+    def handle_bad_request(self):
+        return Response({"error": "Bad Request"}, status=400)
+
+    def post(self, request):
+        return self.handle_bad_request()
+
+    def put(self, request):
+        return self.handle_bad_request()
+
+    def delete(self, request):
+        return self.handle_bad_request()
+
+    def options(self, request, *args, **kwargs):
+        return Response(status=405, headers={"Allow": "GET"})

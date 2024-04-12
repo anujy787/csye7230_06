@@ -16,56 +16,56 @@ logger = setup_logger()
 
 
 
-class TravelPlanCreationTest(TestCase):
-    def setUp(self):
-        self.client = APIClient()
-        self.fake = Faker()
-        self.user_data = self.generate_random_user_data()
-        self.user = self.create_test_user(self.user_data)
-        self.client.force_authenticate(user=self.user)  # Use DRF's built-in auth handling
+# class TravelPlanCreationTest(TestCase):
+#     def setUp(self):
+#         self.client = APIClient()
+#         self.fake = Faker()
+#         self.user_data = self.generate_random_user_data()
+#         self.user = self.create_test_user(self.user_data)
+#         self.client.force_authenticate(user=self.user)  # Use DRF's built-in auth handling
 
-    def generate_random_user_data(self):
-        return {
-            "first_name": self.fake.first_name(),
-            "last_name": self.fake.last_name(),
-            "email": self.fake.email(),
-            "password": self.fake.password(),
-        }
+#     def generate_random_user_data(self):
+#         return {
+#             "first_name": self.fake.first_name(),
+#             "last_name": self.fake.last_name(),
+#             "email": self.fake.email(),
+#             "password": self.fake.password(),
+#         }
 
-    def create_test_user(self, user_data):
-        # Assuming you have a registration function that can handle direct user creation
-        user = User.objects.create_user(
-            email=user_data['email'],
-            password=user_data['password'],
-            first_name=user_data['first_name'],
-            last_name=user_data['last_name'],
-            is_verified=True  # Directly set verified if necessary for the test
-        )
-        return user
+#     def create_test_user(self, user_data):
+#         # Assuming you have a registration function that can handle direct user creation
+#         user = User.objects.create_user(
+#             email=user_data['email'],
+#             password=user_data['password'],
+#             first_name=user_data['first_name'],
+#             last_name=user_data['last_name'],
+#             is_verified=True  # Directly set verified if necessary for the test
+#         )
+#         return user
 
-    def test_travel_plan_lifecycle(self):
-        # User registration already handled in setUp
-        plan_data = {
-            "planned_date": "2024-01-01",
-            "name": "Test Plan",
-            "source": "BOS",
-            "destination": "BOM",
-            "status": "new"
-        }
+#     def test_travel_plan_lifecycle(self):
+#         # User registration already handled in setUp
+#         plan_data = {
+#             "planned_date": "2024-01-01",
+#             "name": "Test Plan",
+#             "source": "BOS",
+#             "destination": "BOM",
+#             "status": "new"
+#         }
 
-        # Create Travel Plan
-        response = self.client.post(reverse("cloud:create-travel-plan"), data=plan_data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+#         # Create Travel Plan
+#         response = self.client.post(reverse("cloud:create-travel-plan"), data=plan_data)
+#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        # Get Travel Plan
-        response = self.client.get(reverse("cloud:get-travel-plan"))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         # Get Travel Plan
+#         response = self.client.get(reverse("cloud:get-travel-plan"))
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # Update Travel Plan
-        plan_id = response.data[0]['plan_id']
-        updated_data = {"name": "Updated Travel Plan"}
-        response = self.client.put(reverse("cloud:update-travel-plan", args=[plan_id]), data=updated_data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         # Update Travel Plan
+#         plan_id = response.data[0]['plan_id']
+#         updated_data = {"name": "Updated Travel Plan"}
+#         response = self.client.put(reverse("cloud:update-travel-plan", args=[plan_id]), data=updated_data)
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 

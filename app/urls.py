@@ -15,7 +15,7 @@ urlpatterns = [
     path("v1/user", RegisterView.as_view(), name="reg"),
     path("v1/user/self", LoginView.as_view(), name="log"),
     path("v1/plan", TravelPlanCreateView.as_view(), name="create-travel-plan"),
-    path("v1/plan/self", TravelPlanUpdateView.as_view(), name="create-travel-plan"),
+    path("v1/plan/self", TravelPlanUpdateView.as_view(), name="get-travel-plan"),
     path(
         "v1/plan/self/<int:pk>",
         TravelPlanUpdateView.as_view(),

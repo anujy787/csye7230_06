@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-from .views import RegisterView, LoginView
+from .views import RegisterView, LoginView, TravelPlanCreateView
 import json
 from faker import Faker
 import base64
@@ -11,6 +11,78 @@ from .models import User
 
 # Get a logger instance
 logger = setup_logger()
+
+
+
+class TravelPlanCreationTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.fake = Faker()
+
+    def generate_random_user_data(self):
+        return {
+            "first_name": self.fake.first_name(),
+            "last_name": self.fake.last_name(),
+            "email": self.fake.email(),
+            "password": self.fake.password(),
+        }
+
+    def test_user_registration_and_travel_plan_creation(self):
+        logger.info("#### START OF USER REGISTRATION ####")
+        user_data = self.generate_random_user_data()
+        logger.info(f"Generating Random User Data:\n{json.dumps(user_data, indent=2)}")
+        response = self.client.post(reverse("cloud:reg"), data=user_data, format="json")
+        logger.info(f"Registration Response Code: {response.status_code}")
+        logger.info(f"Registration Response Data:\n{json.dumps(response.data, indent=2)}")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        user = User.objects.filter(email=user_data["email"]).first()
+        user.is_verified = True
+        user.save()
+        
+        # Authenticate if necessary, depends on your authentication method
+        credentials = base64.b64encode(
+            f"{user_data['email']}:{user_data['password']}".encode()
+        ).decode("utf-8")
+
+        headers = {
+            "Authorization": f"Basic {credentials}",
+        }
+
+        plan_data = {
+            "planned_date": "2024-01-01",
+            "name": "Test Plan",
+            "source": "BOS",
+            "destination": "BOM",
+            "status": "new"
+        }
+        logger.info("#### START OF TRAVEL PLAN CREATION TEST ####")
+        response = self.client.post(reverse("cloud:create-travel-plan"), data=plan_data, format="json", headers=headers)
+        logger.info(f" TRAVEL PLAN RESPONSE : {response}")
+        import pdb; pdb.set_trace()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        logger.info("TRAVEL PLAN CREATION SUCCESSFUL")
+        logger.info("#### END OF TRAVEL PLAN CREATION TEST ####")
+
+
+        logger.info("#### START OF GET TRAVEL PLAN TEST ####")
+        response = self.client.get(reverse("cloud:get-travel-plan"), format="json", headers=headers)
+        logger.info(f" TRAVEL PLAN RESPONSE : {response}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        logger.info("#### END OF GET TRAVEL PLAN TEST ####")
+
+        logger.info("#### START OF TRAVEL PLAN UPDATION TEST ####")
+        
+        logger.info("#### END OF TRAVEL PLAN UPDATION TEST ####")
+
+
+    
+        
+
+
+        
+
+
+
 
 
 class UserRegistrationTest(TestCase):

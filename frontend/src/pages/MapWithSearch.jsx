@@ -13,6 +13,16 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
+
+/**
+ * Represents the MapWithSearch component.
+ * Displays a map with a marker based on the search term provided.
+ * 
+ * @param {Object} props - The component props.
+ * @param {string} props.searchTerm - The search term for location.
+ * @returns {JSX.Element} A React element.
+ */
+
 const MapWithSearch = ({searchTerm }) => {
     const [coordinates, setCoordinates] = useState(null);
 

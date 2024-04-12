@@ -4,6 +4,13 @@ import Lottie from 'lottie-react';
 import Animation from '../assets/compass.json';
 import './ContactUs.css';
 
+/**
+ * Represents the ContactUs component.
+ * Handles the contact information and message form.
+ * 
+ * @returns {JSX.Element} A React element.
+ */
+
 const ContactUs = () => {
   return (
     <div className="page-container">

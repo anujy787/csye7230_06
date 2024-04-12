@@ -5,7 +5,12 @@ import { useNavigate } from 'react-router-dom'
 import './Login.css'
 import Lottie from 'lottie-react';
 import Animation from '../assets/anim2.json';
-
+/**
+ * Represents the Login component.
+ * Handles user login and authentication.
+ * 
+ * @returns {JSX.Element} A React element.
+ */
 
 const Login = () => {
 
@@ -16,6 +21,11 @@ const Login = () => {
     email: '',
     password: ''
   })
+
+
+  /**
+   * Handles user login.
+   */
 
   const handleLogin = async () => {
     try{
@@ -41,6 +51,11 @@ const Login = () => {
       [e.target.name]: e.target.value
     })
   }
+
+
+  /**
+   * Handles Google login.
+   */
 
   const handleGoogleLogin = async () => {
 

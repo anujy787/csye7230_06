@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import './Subscription.css';
 import axios from 'axios';
 
+/**
+ * Represents the SubscriptionPage component.
+ * Handles user subscription to different tiers.
+ * 
+ * @returns {JSX.Element} A React element.
+ */
+
 const SubscriptionPage = () => {
   const [selectedTier, setSelectedTier] = useState(null);
 

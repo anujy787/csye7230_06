@@ -11,7 +11,11 @@ import ActionProvider from "../ActionProvider";
 import MessageParser from "../MessageParser";
 
 Modal.setAppElement('#root');
-
+/**
+ * HomePage - Component for the home page of the application.
+ * Handles displaying plans, creating new plans, server health checks, and chatbot integration.
+ * @returns {JSX.Element} - A React element.
+ */
 const HomePage = () => {
     const apikey = "zr2tbVV14UOQ4QErFvjekLiNriVrYhBc8qZyqGf5jRntcsIzBPLMozCu"
     // const apikey = ""
@@ -29,6 +33,10 @@ const HomePage = () => {
         }
     }, [isLoggedIn]);
 
+    /**
+     * Fetch all plans from the server.
+     */
+
     const fetchAllPlans = async () => {
         try {
            
@@ -41,6 +49,10 @@ const HomePage = () => {
             console.error('Error fetching plans:', error);
         }
     };
+
+     /**
+     * Handle server health check.
+     */
 
     const handleHealthCheck = async () => {
         try {
@@ -55,6 +67,11 @@ const HomePage = () => {
     const handlePlanJoin = (id) => {
         console.log(id);
     };
+
+    /**
+     * Open modal for displaying plan details.
+     * @param {object} plan - The selected plan object.
+     */
 
     const openModal = async(plan1) => {
         if(plan1.link_to_map == null){
@@ -78,6 +95,10 @@ const HomePage = () => {
         setModalOpen(true);
     };
 
+    /**
+     * Close modal.
+     */
+
     const closeModal = () => {
         setModalOpen(false);
         setSelectedPlan(null);
@@ -88,6 +109,10 @@ const HomePage = () => {
       };
 
     const [imageUrl, setImageUrl] = useState('');
+    /**
+     * Handle image search for a destination.
+     * @param {string} destination - The destination for image search.
+     */
     const handleImageSearch = async (destination) => {
         try {
 
@@ -105,10 +130,15 @@ const HomePage = () => {
     
     // create plan modal
     const [createModalOpen, setCreateModalOpen] = useState(false);
+    /**
+     * Open modal for creating a new plan.
+     */
     const openCreateModal = () => {
         setCreateModalOpen(true);
     };
-
+    /**
+     * Close create plan modal.
+     */
     const closeCreateModal = () => {
         setCreateModalOpen(false);
     };
@@ -121,7 +151,9 @@ const HomePage = () => {
         preference: '',
         status: ''
     });
-
+    /**
+     * Handle creating a new plan.
+     */
     const handleCreatePlan = async() => {
         try{
             const auth = JSON.parse(sessionStorage.getItem('auth'));
@@ -136,6 +168,10 @@ const HomePage = () => {
             alert(err)
           }
     };
+    /**
+     * Handle input change for new plan form.
+     * @param {object} e - The event object.
+     */
 
     const handleInputChange = (e) => {
         setNewPlan({
@@ -145,12 +181,18 @@ const HomePage = () => {
     };
     // function to chage map for create
     const [createlocation, setCreatelocation] = useState('Boston');
+    /**
+     * Change map location for create plan.
+     * @param {object} e - The event object.
+     */
     const changeMap = (e) => {
         setCreatelocation(e.target.value);
     };
 
     const [showChatbot, setShowChatbot] = useState(false);
-
+    /**
+     * Toggle chatbot visibility.
+     */
     const toggleChatbot = () => {
         setShowChatbot(!showChatbot);
     };

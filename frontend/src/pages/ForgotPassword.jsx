@@ -5,9 +5,21 @@ import Lottie from 'lottie-react';
 import './ForgotPassword.css';
 import Animation from '../assets/forgot.json';
 
+/**
+ * Represents the ForgotPassword component.
+ * Handles the functionality for resetting a forgotten password.
+ * 
+ * @returns {JSX.Element} A React element.
+ */
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+
+
+  /**
+   * Sends a reset password request to the server.
+   */
 
   const handleResetPassword = async () => {
     try {
@@ -22,6 +34,11 @@ const ForgotPassword = () => {
       setMessage('Failed to send reset password email.');
     }
   };
+   /**
+   * Handles changes in the email input field.
+   * 
+   * @param {object} e - The event object.
+   */
 
   const handleChange = (e) => {
     setEmail(e.target.value);

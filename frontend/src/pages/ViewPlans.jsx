@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ViewPlans.css';
 
+/**
+ * Represents the ViewPlans component.
+ * Displays details of a travel plan.
+ * 
+ * @returns {JSX.Element} A React element.
+ */
+
 const ViewPlans = () => {
   const [plan, setPlan] = useState(null);
 

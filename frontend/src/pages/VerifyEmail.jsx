@@ -2,7 +2,12 @@
 
 import React from 'react';
 import './VerifyEmail.css';
-
+/**
+ * Represents the VerifyEmail component.
+ * Displays a message to verify the email address.
+ * 
+ * @returns {JSX.Element} A React element.
+ */
 const VerifyEmail = () => {
   return (
     <div className="verify-email-container">

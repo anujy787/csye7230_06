@@ -10,6 +10,7 @@ import ForgotPassword from '../pages/ForgotPassword';
 import ContactUs from '../pages/ContactUs';
 import ViewPlans from '../pages/ViewPlans';
 import VerifyEmail from '../pages/VerifyEmail';
+import MapWithSearch from '../pages/MapWithSearch';
 
 
 const RedirectComponent = () => {
@@ -33,6 +34,7 @@ const RedirectComponent = () => {
             <Route path="/contactus" element={<ContactUs/>}/>
             <Route path="/viewplans" element={<ViewPlans/>}/>
             <Route path="/verifyemail" element={<VerifyEmail/>}/>
+            <Route path="/maptest" element={<MapWithSearch/>}/>
         </Routes>
     );
 }

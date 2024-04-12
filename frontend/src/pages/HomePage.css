@@ -225,6 +225,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-top: 40px;
   width: 37.6vw;
+  margin-bottom: 40px;
 }
 
 .modal-card-preference h2 {
@@ -234,4 +235,10 @@
 
 .modal-card-preference p {
   margin-bottom: 8px;
+}
+
+/* map */
+
+.map-container {
+  margin-top: 40px;
 }

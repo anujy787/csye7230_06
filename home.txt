@@ -1,0 +1,113 @@
+// import React from 'react';
+// import { render, screen, fireEvent } from '@testing-library/react';
+// import axios from 'axios';
+// import HomePage from '../pages/HomePage';
+
+// // Mocking Axios
+// jest.mock('axios', () => ({
+//   post: jest.fn(),
+// }));
+
+// jest.mock('lottie-react', () => ({
+//   __esModule: true,
+//   default: jest.fn(),
+// }));
+
+// jest.mock('react-router-dom');
+
+// describe('HomePage component', () => {
+//   beforeEach(() => {
+//     jest.clearAllMocks();
+//   });
+
+//   it('renders the component', () => {
+//     render(<HomePage />);
+//     const headingElement = screen.getByText('Welcome to VentureVerse');
+//     expect(headingElement).toBeInTheDocument();
+//   });
+
+//   it('fetches plans when user is logged in', async () => {
+//     // Mock logged-in state
+//     sessionStorage.setItem(
+//       'auth',
+//       JSON.stringify({ username: 'testuser', password: 'testpassword' })
+//     );
+
+//     // Mock axios response for fetchAllPlans
+//     const plans = [
+//       {
+//         id: 1,
+//         name: 'Plan 1',
+//         source: 'Source 1',
+//         destination: 'Destination 1',
+//       },
+//     ];
+//     axios.get.mockResolvedValueOnce({ data: plans });
+
+//     render(<HomePage />);
+
+//     // Add assertions to verify that plans are fetched and rendered correctly
+//     await screen.findByText('Plan 1');
+//   });
+
+//   it('opens modal when plan is clicked', async () => {
+//     render(<HomePage />);
+
+//     // Mock axios response for handleImageSearch
+//     const imageUrl = 'https://example.com/image.jpg';
+//     axios.get.mockResolvedValueOnce({
+//       data: { photos: [{ src: { original: imageUrl } }] },
+//     });
+
+//     // Click on "View Plans" button to open modal
+//     fireEvent.click(await screen.findByText('View Plans'));
+
+//     // Add assertions to verify that modal opens and displays plan details
+//     expect(screen.getByText('Close Modal')).toBeInTheDocument();
+//     expect(screen.getByAltText('Destination')).toBeInTheDocument();
+//     expect(screen.getByText('Planned Date:')).toBeInTheDocument();
+//     // Add more assertions as needed
+//   });
+
+//   it('creates new plan when form is submitted', async () => {
+//     render(<HomePage />);
+
+//     // Mock axios response for handleCreatePlan
+//     axios.post.mockResolvedValueOnce({});
+
+//     // Fill out form fields
+//     fireEvent.change(screen.getByPlaceholderText('Planned Date (YYYY-MM-DD)'), {
+//       target: { value: '2024-04-15' },
+//     });
+//     fireEvent.change(screen.getByPlaceholderText('Destination'), {
+//       target: { value: 'New York' },
+//     });
+//     fireEvent.change(screen.getByPlaceholderText('Source'), {
+//       target: { value: 'Boston' },
+//     });
+//     fireEvent.change(screen.getByPlaceholderText('Name'), {
+//       target: { value: 'Test Plan' },
+//     });
+
+//     // Submit form
+//     fireEvent.click(screen.getByText('Create'));
+
+//     // Add assertions to verify that axios.post is called with the correct data
+//     await expect(axios.post).toHaveBeenCalledWith(
+//       'http://localhost:8000/v1/plan',
+//       {
+//         planned_date: '2024-04-15',
+//         name: 'Test Plan',
+//         source: 'Boston',
+//         destination: 'New York',
+//         preference: '',
+//         status: '',
+//       }
+//     );
+
+//     // Add assertions to verify that modal closes after submission
+//     expect(screen.queryByText('Create New Plan')).not.toBeInTheDocument();
+//   });
+
+//   // Add more test cases for other functionalities as needed
+// });

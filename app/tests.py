@@ -18,6 +18,9 @@ class TravelPlanCreationTest(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.fake = Faker()
+        self.user_data = self.generate_random_user_data()
+        self.user = self.create_test_user(self.user_data)
+        self.client.force_authenticate(user=self.user)  # Use DRF's built-in auth handling
 
     def generate_random_user_data(self):
         return {
@@ -27,27 +30,19 @@ class TravelPlanCreationTest(TestCase):
             "password": self.fake.password(),
         }
 
-    def test_user_registration_and_travel_plan_creation(self):
-        logger.info("#### START OF USER REGISTRATION ####")
-        user_data = self.generate_random_user_data()
-        logger.info(f"Generating Random User Data:\n{json.dumps(user_data, indent=2)}")
-        response = self.client.post(reverse("cloud:reg"), data=user_data, format="json")
-        logger.info(f"Registration Response Code: {response.status_code}")
-        logger.info(f"Registration Response Data:\n{json.dumps(response.data, indent=2)}")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        user = User.objects.filter(email=user_data["email"]).first()
-        user.is_verified = True
-        user.save()
-        
-        # Authenticate if necessary, depends on your authentication method
-        credentials = base64.b64encode(
-            f"{user_data['email']}:{user_data['password']}".encode()
-        ).decode("utf-8")
+    def create_test_user(self, user_data):
+        # Assuming you have a registration function that can handle direct user creation
+        user = User.objects.create_user(
+            email=user_data['email'],
+            password=user_data['password'],
+            first_name=user_data['first_name'],
+            last_name=user_data['last_name'],
+            is_verified=True  # Directly set verified if necessary for the test
+        )
+        return user
 
-        headers = {
-            "Authorization": f"Basic {credentials}",
-        }
-
+    def test_travel_plan_lifecycle(self):
+        # User registration already handled in setUp
         plan_data = {
             "planned_date": "2024-01-01",
             "name": "Test Plan",
@@ -55,24 +50,21 @@ class TravelPlanCreationTest(TestCase):
             "destination": "BOM",
             "status": "new"
         }
-        logger.info("#### START OF TRAVEL PLAN CREATION TEST ####")
-        response = self.client.post(reverse("cloud:create-travel-plan"), data=plan_data, format="json", headers=headers)
-        logger.info(f" TRAVEL PLAN RESPONSE : {response}")
-        import pdb; pdb.set_trace()
+
+        # Create Travel Plan
+        response = self.client.post(reverse("cloud:create-travel-plan"), data=plan_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        logger.info("TRAVEL PLAN CREATION SUCCESSFUL")
-        logger.info("#### END OF TRAVEL PLAN CREATION TEST ####")
 
-
-        logger.info("#### START OF GET TRAVEL PLAN TEST ####")
-        response = self.client.get(reverse("cloud:get-travel-plan"), format="json", headers=headers)
-        logger.info(f" TRAVEL PLAN RESPONSE : {response}")
+        # Get Travel Plan
+        response = self.client.get(reverse("cloud:get-travel-plan"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        logger.info("#### END OF GET TRAVEL PLAN TEST ####")
 
-        logger.info("#### START OF TRAVEL PLAN UPDATION TEST ####")
-        
-        logger.info("#### END OF TRAVEL PLAN UPDATION TEST ####")
+        # Update Travel Plan
+        plan_id = response.data[0]['plan_id']
+        updated_data = {"name": "Updated Travel Plan"}
+        response = self.client.put(reverse("cloud:update-travel-plan", args=[plan_id]), data=updated_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
 
 
     

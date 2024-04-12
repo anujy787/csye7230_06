@@ -185,13 +185,6 @@ CORS_ORIGIN_WHITELIST = ["http://localhost:3000"]
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "sanuj8655@gmail.com"
-EMAIL_HOST_PASSWORD = "ehrr tqfz qiuj nyns"
-EMAIL_USE_SSL = False
 
 
 # you can go in the Applications folder and expand the Python 3.9 folder. Now first run (or double click) the Install Certificates.command and then Update Shell Profile.command

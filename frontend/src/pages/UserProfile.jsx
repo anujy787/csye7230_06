@@ -1,92 +1,106 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
+import axios from 'axios';
+import defaultAvatar from '../assets/user.png';
+
+const StarRating = ({ rating }) => {
+  const numStars = Math.round(parseFloat(rating));
+  const stars = [];
+  for (let i = 0; i < 5; i++) {
+    if (i < numStars) {
+      stars.push(<span key={i}>&#9733;</span>); // Full star
+    } else {
+      stars.push(<span key={i}>&#9734;</span>); // Empty star
+    }
+  }
+  return <div className="star-rating">{stars}</div>;
+};
 
 const UserProfile = () => {
-  const [fullName, setFullName] = useState('John Doe');
-  const [email, setEmail] = useState('johndoe@example.com');
-  const [bio, setBio] = useState('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla convallis libero in risus mattis, et tristique odio pretium.');
-  const [avatarUrl, setAvatarUrl] = useState('https://via.placeholder.com/150');
-  const [travelPreferences, setTravelPreferences] = useState(['Beach', 'Mountains', 'City']);
-  const [status, setStatus] = useState('Online');
+  const [userData, setUserData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const [editedFullName, setEditedFullName] = useState('');
-  const [editedEmail, setEditedEmail] = useState('');
-  const [editedBio, setEditedBio] = useState('');
-  const [editedAvatarUrl, setEditedAvatarUrl] = useState('');
-  const [editedTravelPreferences, setEditedTravelPreferences] = useState([]);
-  const [editedStatus, setEditedStatus] = useState('');
+  const [editedData, setEditedData] = useState({});
+  const auth = JSON.parse(sessionStorage.getItem('auth'));
+  const isLoggedIn = auth && auth.username && auth.password;
+  
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchUserData();
+    }
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/v1/user/self', {
+        auth: {
+          username: auth.username,
+          password: auth.password
+        }
+      });
+      setUserData(response.data);
+      setEditedData(response.data); // Initialize edited data with fetched user data
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
-    if (!isEditing) {
-      setEditedFullName(fullName);
-      setEditedEmail(email);
-      setEditedBio(bio);
-      setEditedAvatarUrl(avatarUrl);
-      setEditedTravelPreferences([...travelPreferences]);
-      setEditedStatus(status);
-    }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    switch (name) {
-      case 'editedFullName':
-        setEditedFullName(value);
-        break;
-      case 'editedEmail':
-        setEditedEmail(value);
-        break;
-      case 'editedBio':
-        setEditedBio(value);
-        break;
-      case 'editedAvatarUrl':
-        setEditedAvatarUrl(value);
-        break;
-      case 'editedTravelPreferences':
-        setEditedTravelPreferences(value.split(',').map((pref) => pref.trim()));
-        break;
-      case 'editedStatus':
-        setEditedStatus(value);
-        break;
-      default:
-        break;
-    }
+    setEditedData({ ...editedData, [name]: value });
   };
 
-  const handleSave = () => {
-    setFullName(editedFullName);
-    setEmail(editedEmail);
-    setBio(editedBio);
-    setAvatarUrl(editedAvatarUrl);
-    setTravelPreferences([...editedTravelPreferences]);
-    setStatus(editedStatus);
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      const editedFields = {};
+      for (const key in editedData) {
+        if (editedData[key] !== userData[key]) {
+          editedFields[key] = editedData[key];
+        }
+      }
+      await axios.put('http://127.0.0.1:8000/v1/user/self', editedFields, {
+        auth: {
+          username: auth.username,
+          password: auth.password
+        }
+      });
+      setIsEditing(false);
+      fetchUserData();
+    } catch (error) {
+      console.error('Error saving user data:', error);
+    }
   };
 
   return (
     <div className="user-profile">
-      <img src={avatarUrl} alt="User Avatar" />
-      <h2>{fullName}</h2>
-      <p>Username: JohnDoe</p>
-      <p>Email: {email}</p>
-      <p>Bio: {bio}</p>
-      <p>Status: {status}</p>
-      <p>Travel Preferences:</p>
-      <ul>
-        {travelPreferences.map((preference, index) => (
-          <li key={index}>{preference}</li>
-        ))}
-      </ul>
-      <button onClick={handleEditToggle}>Edit</button>
+      <img src={editedData.avatarUrl || defaultAvatar} alt="User Avatar" />
+      <h2>{`${editedData.first_name} ${editedData.last_name}`}</h2>
+      <p>Username: {`${editedData.first_name} ${editedData.last_name}`}</p>
+      <p>Email: {editedData.email}</p>
+      <p>Bio: {editedData.bio || 'No bio provided'}</p>
+      <p>Status: {editedData.status || 'Online'}</p>
+      <p><StarRating rating={userData.rating} /></p>
+      <button onClick={handleEditToggle}>{isEditing ? 'Cancel' : 'Edit'}</button>
       {isEditing && (
         <div className="modal">
           <label>
             Full Name:
             <input
               type="text"
-              name="editedFullName"
-              value={editedFullName}
+              name="first_name"
+              value={editedData.first_name || ''}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Last Name:
+            <input
+              type="text"
+              name="last_name"
+              value={editedData.last_name || ''}
               onChange={handleInputChange}
             />
           </label>
@@ -94,43 +108,18 @@ const UserProfile = () => {
             Email:
             <input
               type="email"
-              name="editedEmail"
-              value={editedEmail}
+              name="email"
+              value={editedData.email || ''}
               onChange={handleInputChange}
             />
           </label>
           <label>
             Bio:
             <textarea
-              name="editedBio"
-              value={editedBio}
+              name="bio"
+              value={editedData.bio || ''}
               onChange={handleInputChange}
             />
-          </label>
-          <label>
-            Avatar URL:
-            <input
-              type="text"
-              name="editedAvatarUrl"
-              value={editedAvatarUrl}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Travel Preferences:
-            <input
-              type="text"
-              name="editedTravelPreferences"
-              value={editedTravelPreferences.join(', ')}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Status:
-            <select name="editedStatus" value={editedStatus} onChange={handleInputChange}>
-              <option value="Online">Online</option>
-              <option value="Offline">Offline</option>
-            </select>
           </label>
           <button onClick={handleSave}>Save</button>
         </div>

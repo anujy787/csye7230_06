@@ -35,12 +35,24 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=25, help_text="User's last name")
     email = models.EmailField(unique=True, help_text="User's email address")
     password = models.CharField(max_length=255)  # Avoid using help_text for passwords
-    account_created = models.DateTimeField(auto_now_add=True, help_text="Timestamp when the user account was created")
-    account_updated = models.DateTimeField(auto_now=True, help_text="Timestamp when the user account was last updated")
-    rating = models.DecimalField(max_digits=3, decimal_places=2, default=5.00, help_text="User's rating")
-    is_subscribed = models.BooleanField(default=False, help_text="Whether the user is subscribed to notifications")
-    bio = models.CharField(max_length=150, blank=True, default="", help_text="User's biography")
-    is_verified = models.BooleanField(default=False, help_text="Whether the user is verified")
+    account_created = models.DateTimeField(
+        auto_now_add=True, help_text="Timestamp when the user account was created"
+    )
+    account_updated = models.DateTimeField(
+        auto_now=True, help_text="Timestamp when the user account was last updated"
+    )
+    rating = models.DecimalField(
+        max_digits=3, decimal_places=2, default=5.00, help_text="User's rating"
+    )
+    is_subscribed = models.BooleanField(
+        default=False, help_text="Whether the user is subscribed to notifications"
+    )
+    bio = models.CharField(
+        max_length=150, blank=True, default="", help_text="User's biography"
+    )
+    is_verified = models.BooleanField(
+        default=False, help_text="Whether the user is verified"
+    )
     username = None
 
     USERNAME_FIELD = "email"
@@ -53,9 +65,15 @@ class User(AbstractUser):
 
 
 class VerificationToken(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, help_text="User associated with this verification token")
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        help_text="User associated with this verification token",
+    )
     token = models.CharField(max_length=64, help_text="Verification token value")
-    created_at = models.DateTimeField(auto_now_add=True, help_text="Timestamp when the token was created")
+    created_at = models.DateTimeField(
+        auto_now_add=True, help_text="Timestamp when the token was created"
+    )
 
     @staticmethod
     def generate_token():
@@ -88,23 +106,48 @@ class VerificationToken(models.Model):
 
 
 class TravelPlan(models.Model):
-    plan_id = models.AutoField(primary_key=True, help_text="Unique identifier for the travel plan")
-    created_by = models.CharField(max_length=50, help_text="User who created the travel plan")
-    user_uuid = models.UUIDField(help_text="UUID of the user associated with the travel plan")
-    planned_date = models.DateField(null=False, help_text="Date when the travel plan is scheduled")
-    name = models.CharField(max_length=120, null=False, help_text="Name of the travel plan")
-    source = models.CharField(max_length=255, blank=True, help_text="Starting location of the travel plan")
-    destination = models.CharField(max_length=255, blank=True, help_text="Destination of the travel plan")
-    preference = models.TextField(blank=True, null=True, help_text="Additional preferences for the travel plan")
+    plan_id = models.AutoField(
+        primary_key=True, help_text="Unique identifier for the travel plan"
+    )
+    created_by = models.CharField(
+        max_length=50, help_text="User who created the travel plan"
+    )
+    user_uuid = models.UUIDField(
+        help_text="UUID of the user associated with the travel plan"
+    )
+    planned_date = models.DateField(
+        null=False, help_text="Date when the travel plan is scheduled"
+    )
+    name = models.CharField(
+        max_length=120, null=False, help_text="Name of the travel plan"
+    )
+    source = models.CharField(
+        max_length=255, blank=True, help_text="Starting location of the travel plan"
+    )
+    destination = models.CharField(
+        max_length=255, blank=True, help_text="Destination of the travel plan"
+    )
+    preference = models.TextField(
+        blank=True, null=True, help_text="Additional preferences for the travel plan"
+    )
     status = models.CharField(
         max_length=50,
         default="new",
         choices=(("planning", "Planning"), ("completed", "Completed"), ("new", "New")),
-        help_text="Status of the travel plan"
+        help_text="Status of the travel plan",
     )
-    link_to_map = models.URLField(max_length=500, blank=True, null=True, help_text="URL link to the map for the travel plan")
-    created_at = models.DateTimeField(auto_now_add=True, help_text="Timestamp when the travel plan was created")
-    updated_at = models.DateTimeField(auto_now=True, help_text="Timestamp when the travel plan was last updated")
+    link_to_map = models.URLField(
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text="URL link to the map for the travel plan",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True, help_text="Timestamp when the travel plan was created"
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True, help_text="Timestamp when the travel plan was last updated"
+    )
 
     class Meta:
         db_table = "travel_plans"
@@ -115,10 +158,16 @@ class TravelPlan(models.Model):
 
 class Trip(models.Model):
     plan = models.ForeignKey(
-        "TravelPlan", on_delete=models.CASCADE, related_name="trips", help_text="Travel plan associated with the trip"
+        "TravelPlan",
+        on_delete=models.CASCADE,
+        related_name="trips",
+        help_text="Travel plan associated with the trip",
     )
     user = models.ForeignKey(
-        "User", on_delete=models.CASCADE, related_name="user_trips", help_text="User associated with the trip"
+        "User",
+        on_delete=models.CASCADE,
+        related_name="user_trips",
+        help_text="User associated with the trip",
     )
     status = models.CharField(
         max_length=50,
@@ -128,7 +177,7 @@ class Trip(models.Model):
             ("Requested", "Requested"),
         ),
         default="Requested",
-        help_text="Status of the trip"
+        help_text="Status of the trip",
     )
 
     class Meta:

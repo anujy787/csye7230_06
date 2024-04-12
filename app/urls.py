@@ -5,7 +5,8 @@ from .views import (
     TravelPlanCreateView,
     TravelPlanUpdateView,
     AllTravelPlansView,
-    AddTripView,
+    AddUserToPlanView,
+    AllTripViews,
 )
 from . import views
 from django.contrib.auth import views as auth_views
@@ -21,7 +22,8 @@ urlpatterns = [
         name="update-travel-plan",
     ),
     path("v1/allplans/", AllTravelPlansView.as_view(), name="all-travel-plans"),
-    path("v1/trip", AddTripView.as_view(), name="add-trip"),
+    path("v1/trip", AddUserToPlanView.as_view(), name="add-trip"),
+    path("v1/alltrips", AllTripViews.as_view(), name="all-trip"),
     path("", views.home, name="home"),
     path("login/", views.login, name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),

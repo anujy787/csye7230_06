@@ -598,7 +598,7 @@ class AllTravelPlansView(APIView):
         return Response(status=405, headers={"Allow": "GET"})
 
 
-class AddTripView(APIView):
+class AddUserToPlanView(APIView):
     authentication_classes = [BasicAuthHeaderAuthentication]
 
     @swagger_auto_schema(
@@ -650,6 +650,42 @@ class AddTripView(APIView):
             trip_serializer.is_valid(raise_exception=True)
             trip_serializer.save()
             return Response(trip_serializer.data)
+        elif user.is_verified == False:
+            raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
+        else:
+            raise AuthenticationFailed("User not authenticated!")
+
+    def get(self, request):
+        if request.query_params:
+            return Response({"error": "Query parameters not allowed"})
+
+        user = request.user
+
+        if user.is_authenticated and user.is_verified:
+
+            plans = Trip.objects.filter(user=user.id)
+            serializer = TripSerializer(plans, many=True)
+            return Response(serializer.data)
+        elif user.is_verified == False:
+            raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
+        else:
+            raise AuthenticationFailed("User not authenticated!")
+
+
+class AllTripViews(APIView):
+    authentication_classes = [BasicAuthHeaderAuthentication]
+
+    def get(self, request):
+        if request.query_params:
+            return Response({"error": "Query parameters not allowed"})
+
+        user = request.user
+
+        if user.is_authenticated and user.is_verified:
+
+            plans = Trip.objects.all()
+            serializer = TripSerializer(plans, many=True)
+            return Response(serializer.data)
         elif user.is_verified == False:
             raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
         else:

@@ -317,6 +317,10 @@ class AddTripView(APIView):
             data = {"plan": request.data["plan"], "user": req_user["id"]}
             plan_id = int(request.data["plan"])
             req_user_id = req_user["id"]
+            if os.getenv("CI") == "true":
+                print("Mail Not Sent Since Env is : CI")
+            else:
+                from mailing import send_trip_invite
             send_trip_invite(owner_email, plan_name, user.email, plan_id, req_user_id)
             trip_serializer = TripSerializer(data=data)
             trip_serializer.is_valid(raise_exception=True)

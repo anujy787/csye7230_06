@@ -7,7 +7,8 @@ import MapWithSearch from './MapWithSearch';
 import Chatbot from 'react-chatbot-kit';
 import 'react-chatbot-kit/build/main.css'; // Import chatbot styling
 import chatbotConfig from '../chatbotConfig'; // Adjust the path as necessary
-
+import ActionProvider from "../ActionProvider";
+import MessageParser from "../MessageParser";
 
 Modal.setAppElement('#root');
 
@@ -187,10 +188,12 @@ const HomePage = () => {
                     </div>
                 </header>
                 <div>
-                    <button className="header-button" onClick={toggleChatbot}>Open Chatbot</button>
+                    <button className="chat-bot-button" onClick={toggleChatbot}>Assistant</button>
             {showChatbot && (
                 <Chatbot
                     config={chatbotConfig}
+                    actionProvider={ActionProvider}
+                    messageParser={MessageParser}
                     style={{
                         position: 'absolute',
                         bottom: '20px',

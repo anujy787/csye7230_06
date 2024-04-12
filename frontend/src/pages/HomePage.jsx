@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
 import Modal from 'react-modal';
+import MapWithSearch from './MapWithSearch';
 
 Modal.setAppElement('#root');
 
@@ -85,8 +86,56 @@ const HomePage = () => {
             console.error('Error searching for images:', error);
         }
     };
-      
+    // create plan modal
+    const [createModalOpen, setCreateModalOpen] = useState(false);
+    const openCreateModal = () => {
+        setCreateModalOpen(true);
+    };
 
+    const closeCreateModal = () => {
+        setCreateModalOpen(false);
+    };
+
+    const [newPlan, setNewPlan] = useState({
+        planned_date: '',
+        name: '',
+        source: '',
+        destination: '',
+        preference: '',
+        status: ''
+    });
+
+    const handleCreatePlan = async() => {
+        try{
+            console.log(newPlan)
+            const response = await axios.post('http://localhost:8000/v1/plan', {
+              auth: {
+                username: sessionStorage.getItem('username'),
+                password: sessionStorage.getItem('password')
+              }
+            });
+            
+            console.log(newPlan)
+            console.log(response)
+          } 
+          catch(err) {
+            alert(err)
+            console.log(err)
+          }
+    };
+
+    const handleInputChange = (e) => {
+        console.log(e.target.value)
+        setNewPlan({
+            ...newPlan,
+            [e.target.name]: e.target.value
+        });
+    };
+    // function to chage map for create
+    const [createlocation, setCreatelocation] = useState('Boston');
+    const changeMap = (e) => {
+        setCreatelocation(e.target.value);
+    };
     return (
         <div className="container">
             <div className="header-container">
@@ -103,7 +152,7 @@ const HomePage = () => {
             </div>
             <div className="content-container">
                 <div className="section">
-                    <h1 style={{ textAlign: 'center', fontWeight:'bold' }}>All Plans</h1>
+                    <h1 style={{ textAlign: 'center', fontWeight:'bold' }}>All Plans<button onClick={openCreateModal}>Create Plan</button></h1>
                     <div className="card-container">
                         {plans.map((plan, index) => (
                             <div key={index} className="card">
@@ -137,10 +186,43 @@ const HomePage = () => {
                         </div>
                         <p className="modal-card-preference"><strong>Preference:</strong>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse sapiente et quod fugiat illo quam eius at laborum excepturi officiis accusantium blanditiis repellat magnam doloribus nulla commodi, molestiae rem. Perferendis!</p>
                         <img src={imageUrl} alt="Destination" className="modal-image" />
- 
+                        <div className="map-container">
+                            <MapWithSearch searchTerm={selectedPlan.destination} />
+                        </div>
    
                     </div>
                 )}
+            </Modal>
+            
+
+            {/* Create Plan Modal */}
+            <Modal
+                isOpen={createModalOpen}
+                onRequestClose={closeCreateModal}
+                style={customStyles}
+                className="plan-modal"
+            >
+                <button onClick={closeCreateModal}>Close Modal</button>
+                <div>
+                    <h2>Create New Plan</h2>
+                    {/* Form for creating a new plan */}
+                    <div className="modal-card-container">
+                        <input type="text" className="modal-card" name="planned_date" onChange={handleInputChange} placeholder='Planned Date (YYYY-MM-DD)' />
+                        <input type="text" className="modal-card" name="destination" onChange={(event) => {
+                            handleInputChange(event);
+                            changeMap(event);
+                        }}
+                        placeholder='Destination' />
+                        {/* <input type="text" className="modal-card" name="preference" onChange={handleInputChange} placeholder='Preference' /> */}
+                        <input type="text" className="modal-card" name="source" onChange={handleInputChange} placeholder='Source' />
+                        {/* <input type="text" className="modal-card" name="status" onChange={handleInputChange} placeholder='Status' /> */}
+                        <input type="text" className="modal-card" name="name" onChange={handleInputChange} placeholder='Name'/>
+                        <button type="submit" onClick={handleCreatePlan} className="modal-card">Create</button>
+                    </div>
+                    <div className="map-container">
+                            <MapWithSearch searchTerm={createlocation} />
+                    </div>
+                </div>
             </Modal>
         </div>
     );

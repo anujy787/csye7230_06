@@ -307,10 +307,18 @@ class AddTripView(APIView):
         user = request.user
 
         if user.is_authenticated and user.is_verified:
-            plans = TravelPlan.objects.filter(plan_id=request.data["plan"])
-            travel_serializer = TravelPlanSerializer(plans, many=True)
-            send_trip_invite(user, travel_serializer.data)
-            trip_serializer = TripSerializer(data=request.data)
+            plan = TravelPlan.objects.get(plan_id=request.data["plan"])
+            req_user = UserSerializer(user).data
+            plan_detail = TravelPlanSerializer(plan).data
+            plan_name = plan_detail["name"]
+            owner_uuid = plan_detail["user_uuid"]
+            owner = User.objects.get(id=owner_uuid)
+            owner_email = UserSerializer(owner).data["email"]
+            data = {"plan": request.data["plan"], "user": req_user["id"]}
+            plan_id = int(request.data["plan"])
+            req_user_id = req_user["id"]
+            send_trip_invite(owner_email, plan_name, user.email, plan_id, req_user_id)
+            trip_serializer = TripSerializer(data=data)
             trip_serializer.is_valid(raise_exception=True)
             trip_serializer.save()
             return Response(trip_serializer.data)

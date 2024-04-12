@@ -26,4 +26,6 @@ urlpatterns = [
     path("healthz/", include("healthz.urls")),
     path("accounts/", include("allauth.urls")),
     path("verify/", views.verify_email, name="verify_email"),
+    path("trip/<str:id>/accept/", views.accept_trip, name="accept_trip"),
+    path("trip/<str:id>/reject/", views.reject_trip, name="reject_trip"),
 ]

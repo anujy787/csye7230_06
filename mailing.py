@@ -39,7 +39,6 @@ def send_simple_message(email, subject, message=None, html_message=None):
 
 def send_verification_email(email, token):
     """Constructs and sends the verification email."""
-
     subject = "Welcome to VentureVerse - Verify your email"
     message = f"Click the following link within 1 Day to verify your email: {baseurl}/verify?token={token}"
     response = send_simple_message(email, subject, message=message)

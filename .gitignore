@@ -142,4 +142,7 @@ dist
 venv/
 *pycache*
 /virtualVerse
+uni-vnv
 /uni-vnv
+
+

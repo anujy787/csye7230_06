@@ -29,17 +29,13 @@ const Login = () => {
         sessionStorage.setItem('auth', JSON.stringify({ username: user.email, password: user.password }));
         navigate("/", { replace: true });
       }
-      
-      console.log(response)
     } 
     catch(err) {
       alert(err)
-      console.log(err)
     }
     
   }
   const handleChange = (e) => {
-    console.log(e.target.value)
     setUser({
       ...user,
       [e.target.name]: e.target.value

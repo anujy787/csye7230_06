@@ -46,7 +46,6 @@ const HomePage = () => {
         try {
             const response = await axios.get('http://localhost:8000/healthz/');
             alert('Very Healthy 🚀');
-            console.log(response.status);
         } catch (error) {
             alert('Not Healthy ❌');
             console.error('Error checking server health:', error);
@@ -62,7 +61,6 @@ const HomePage = () => {
             await handleImageSearch(plan1.destination);
             try{
                 const auth = JSON.parse(sessionStorage.getItem('auth'));
-                console.log("storing url in db");
                 const response = await axios.put(`http://localhost:8000/v1/plan/self/${plan1.plan_id}`,{
                     link_to_map: imageUrl
                 },{
@@ -73,13 +71,9 @@ const HomePage = () => {
                 });
             }
             catch(err){
-                console.log(err)
+                alert(err)
             }
         }
-        else{
-        }
-        console.log(imageUrl);
-        console.log(plan1);
         setSelectedPlan(plan1);
         setModalOpen(true);
     };
@@ -103,7 +97,6 @@ const HomePage = () => {
                 }
             });
             setImageUrl(response.data.photos[0].src.original);
-            console.log('Image URL fetched:', imageUrl);
             
         } catch (error) {
             console.error('Error searching for images:', error);
@@ -131,27 +124,20 @@ const HomePage = () => {
 
     const handleCreatePlan = async() => {
         try{
-            console.log(newPlan)
             const auth = JSON.parse(sessionStorage.getItem('auth'));
-            console.log(auth)
             const response = await axios.post('http://localhost:8000/v1/plan',newPlan, {
               auth: {
                 username: auth.username,
                 password: auth.password
               }
             });
-
-            console.log(newPlan)
-            console.log(response)
           } 
           catch(err) {
             alert(err)
-            console.log(err)
           }
     };
 
     const handleInputChange = (e) => {
-        console.log(e.target.value)
         setNewPlan({
             ...newPlan,
             [e.target.name]: e.target.value

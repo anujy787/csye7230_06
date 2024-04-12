@@ -25,10 +25,10 @@ const MapWithSearch = ({searchTerm }) => {
             const { lat, lon } = data[0];
             setCoordinates({ lat: parseFloat(lat), lon: parseFloat(lon) });
           } else {
-            console.log('Location not found');
+            alert('Location not found');
           }
         } catch (error) {
-          console.error('Error fetching data:', error);
+          alert('Error fetching data:', error);
         }
       };
 

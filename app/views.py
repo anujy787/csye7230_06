@@ -165,7 +165,7 @@ class TravelPlanCreateView(APIView):
     authentication_classes = [BasicAuthHeaderAuthentication]
 
     def post(self, request):
-
+        
         if request.query_params:
             return Response({"error": "Query parameters not allowed"}, status=400)
 

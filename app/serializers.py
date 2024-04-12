@@ -39,6 +39,7 @@ class TravelPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = TravelPlan
         fields = [
+            "plan_id",
             "created_by",
             "planned_date",
             "name",

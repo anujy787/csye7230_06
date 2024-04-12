@@ -39,7 +39,7 @@ const Register = () => {
     try {
       const response = await axios.post('http://localhost:8000/v1/user', user);
       if (response.status === 201) {
-        navigate("/", { replace: true });
+        navigate("/verifyemail", { replace: true });
       }
     } catch (error) {
       if (error.response) {

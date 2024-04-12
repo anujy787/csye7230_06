@@ -116,7 +116,7 @@ class LoginView(APIView):
         if user.is_authenticated and user.is_verified:
             data = request.data
 
-            allowed_fields = ["first_name", "last_name", "password", "username"]
+            allowed_fields = ["first_name", "last_name", "password", "username", "bio"]
             for field in allowed_fields:
                 if field in data and not data[field].strip():
                     return Response({"error": f"{field} cannot be blank"}, status=400)
@@ -131,6 +131,8 @@ class LoginView(APIView):
                     user.last_name = data["last_name"]
                 elif field == "username":
                     user.username = data["username"]
+                elif field == "bio":
+                    user.bio = data["bio"]
                 elif field == "password":
                     hashed_password = bcrypt.hashpw(
                         data["password"].encode("utf-8"), bcrypt.gensalt()

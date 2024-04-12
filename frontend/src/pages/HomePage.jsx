@@ -15,20 +15,19 @@ const HomePage = () => {
 
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState(null);
-  
+    const auth = JSON.parse(sessionStorage.getItem('auth'));
+    const isLoggedIn = auth && auth.username && auth.password;
+
     useEffect(() => {
-        fetchAllPlans();
-    }, []);
+        if (isLoggedIn) {
+            fetchAllPlans();
+        }
+    }, [isLoggedIn]);
 
     const fetchAllPlans = async () => {
         try {
-            const auth = JSON.parse(sessionStorage.getItem('auth'));
-            if (!auth || !auth.username || !auth.password) {
-                console.error('No authentication credentials found');
-                return;
-            }
-
-            axios.defaults.headers.common['Authorization'] = `Basic ${btoa(`${auth.username}:${auth.password}`)}`;
+           
+             axios.defaults.headers.common['Authorization'] = `Basic ${btoa(`${auth.username}:${auth.password}`)}`;
 
             const response = await axios.get('http://localhost:8000/v1/allplans/');
             setPlans(response.data);
@@ -141,8 +140,15 @@ const HomePage = () => {
             <div className="header-container">
                 <header className="header">
                     <div className="header-buttons">
-                        <button className="header-button" onClick={() => navigate('/login')}>Login</button>
-                        <button className="header-button" onClick={() => navigate('/register')}>Signup</button>
+                    {!isLoggedIn && (
+                            <>
+                                <button className="header-button" onClick={() => navigate('/login')}>Login</button>
+                                <button className="header-button" onClick={() => navigate('/register')}>Signup</button>
+                            </>
+                        )}
+                        {isLoggedIn && (
+                            <button className="header-button" onClick={() => navigate('/user-profile')}>Profile</button>
+                        )}
                         <button className="header-button" onClick={() => navigate('/contactus')}>Contact Us</button>
                     </div>
                 </header>

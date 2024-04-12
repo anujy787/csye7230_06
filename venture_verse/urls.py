@@ -27,7 +27,8 @@ from rest_framework import permissions
 schema_view = get_schema_view(
     openapi.Info(
         title="VentureVerse ",
-        default_version='v1',),
+        default_version="v1",
+    ),
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
@@ -40,6 +41,9 @@ urlpatterns = [
     path("verify/", views.verify_email, name="verify_email"),
     path("trip/<str:id>/accept/", views.accept_trip, name="accept_trip"),
     path("trip/<str:id>/reject/", views.reject_trip, name="reject_trip"),
-    path('docs/', schema_view.with_ui('swagger', cache_timeout=0),name='schema-swagger-ui'),
-    
+    path(
+        "docs/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
 ]

@@ -45,3 +45,4 @@ jobs:
 
       - name: Run TripModelTest
         run: python manage.py test app.tests.TripModelTest
+          python manage.py test app.tests.TravelPlanCreationTest

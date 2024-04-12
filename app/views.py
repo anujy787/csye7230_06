@@ -17,7 +17,6 @@ import re
 from django.utils.dateparse import parse_datetime
 
 
-
 # Create your views here.
 
 
@@ -42,6 +41,7 @@ class RegisterView(APIView):
             print("Mail Not Sent Since Env is : CI")
         else:
             from mailing import send_verification_email
+
             send_verification_email(request.data.get("email"), verification_token)
         return Response(serializer.data, status=201)
 
@@ -117,11 +117,20 @@ class LoginView(APIView):
         if user.is_authenticated and user.is_verified:
             data = request.data
 
-            allowed_fields = ["first_name", "last_name", "password", "username", "bio", "is_subscribed"]
+            allowed_fields = [
+                "first_name",
+                "last_name",
+                "password",
+                "username",
+                "bio",
+                "is_subscribed",
+            ]
             for field in allowed_fields:
                 if field in data:
                     if isinstance(data[field], str) and not data[field].strip():
-                        return Response({"error": f"{field} cannot be blank"}, status=400)
+                        return Response(
+                            {"error": f"{field} cannot be blank"}, status=400
+                        )
                     elif isinstance(data[field], bool):
                         setattr(user, field, data[field])
                     else:
@@ -157,7 +166,6 @@ class LoginView(APIView):
         else:
             raise AuthenticationFailed("User not authenticated!")
 
-
     def options(self, request, *args, **kwargs):
         return Response(status=405, headers={"Allow": "GET"})
 
@@ -166,7 +174,7 @@ class TravelPlanCreateView(APIView):
     authentication_classes = [BasicAuthHeaderAuthentication]
 
     def post(self, request):
-        
+
         if request.query_params:
             return Response({"error": "Query parameters not allowed"}, status=400)
 
@@ -321,7 +329,10 @@ class AddTripView(APIView):
                 print("Mail Not Sent Since Env is : CI")
             else:
                 from mailing import send_trip_invite
-                send_trip_invite(owner_email, plan_name, user.email, plan_id, req_user_id)
+
+                send_trip_invite(
+                    owner_email, plan_name, user.email, plan_id, req_user_id
+                )
             trip_serializer = TripSerializer(data=data)
             trip_serializer.is_valid(raise_exception=True)
             trip_serializer.save()

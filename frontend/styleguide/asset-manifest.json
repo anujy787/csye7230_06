@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.js": "/build/bundle.c05ce92d.js",
+    "main.css": "/static/css/main.fd4c317f.css",
+    "vverse-logo.png": "/bf541938ad5960b2eaa9.png",
+    "user.png": "/a6143582309785dca610.png",
+    "index.html": "/index.html"
+  },
+  "entrypoints": [
+    "build/bundle.c05ce92d.js",
+    "static/css/main.fd4c317f.css"
+  ]
+}

@@ -34,12 +34,20 @@ const Login = () => {
           password: user.password,
         },
       });
+
       if (response.status === 200) {
         sessionStorage.setItem(
           'auth',
           JSON.stringify({ username: user.email, password: user.password })
         );
         navigate('/', { replace: true });
+        if (response.status === 200) {
+          sessionStorage.setItem(
+            'auth',
+            JSON.stringify({ username: user.email, password: user.password })
+          );
+          navigate('/', { replace: true });
+        }
       }
     } catch (err) {
       setError(err.message);

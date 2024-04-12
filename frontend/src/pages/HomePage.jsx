@@ -7,13 +7,15 @@ import MapWithSearch from './MapWithSearch';
 import Chatbot from 'react-chatbot-kit';
 import 'react-chatbot-kit/build/main.css'; // Import chatbot styling
 import chatbotConfig from '../chatbotConfig'; // Adjust the path as necessary
+import ActionProvider from "../ActionProvider";
+import MessageParser from "../MessageParser";
 
 
 Modal.setAppElement('#root');
 
 const HomePage = () => {
-    const apikey = "zr2tbVV14UOQ4QErFvjekLiNriVrYhBc8qZyqGf5jRntcsIzBPLMozCu"
-    // const apikey = ""
+    // const apikey = "zr2tbVV14UOQ4QErFvjekLiNriVrYhBc8qZyqGf5jRntcsIzBPLMozCu"
+    const apikey = ""
     const navigate = useNavigate();
     const [plans, setPlans] = useState([]);
 
@@ -57,26 +59,7 @@ const HomePage = () => {
     };
 
     const openModal = async(plan1) => {
-        if(plan1.link_to_map == null){
-            await handleImageSearch(plan1.destination);
-            try{
-                const auth = JSON.parse(sessionStorage.getItem('auth'));
-                console.log("storing url in db");
-                const response = await axios.put(`http://localhost:8000/v1/plan/self/${plan1.plan_id}`,{
-                    link_to_map: imageUrl
-                },{
-                    auth: {
-                        username: auth.username,
-                        password: auth.password
-                    }
-                });
-            }
-            catch(err){
-                console.log(err)
-            }
-        }
-        else{
-        }
+        await handleImageSearch(plan1.destination);
         console.log(imageUrl);
         console.log(plan1);
         setSelectedPlan(plan1);
@@ -102,7 +85,7 @@ const HomePage = () => {
                 }
             });
             setImageUrl(response.data.photos[0].src.original);
-            console.log('Image URL fetched:', imageUrl);
+            console.log('Image URL:', imageUrl);
             
         } catch (error) {
             console.error('Error searching for images:', error);
@@ -131,12 +114,10 @@ const HomePage = () => {
     const handleCreatePlan = async() => {
         try{
             console.log(newPlan)
-            const auth = JSON.parse(sessionStorage.getItem('auth'));
-            console.log(auth)
-            const response = await axios.post('http://localhost:8000/v1/plan',newPlan, {
+            const response = await axios.post('http://localhost:8000/v1/plan', {
               auth: {
-                username: auth.username,
-                password: auth.password
+                username: sessionStorage.getItem('username'),
+                password: sessionStorage.getItem('password')
               }
             });
 
@@ -187,10 +168,12 @@ const HomePage = () => {
                     </div>
                 </header>
                 <div>
-                    <button className="header-button" onClick={toggleChatbot}>Open Chatbot</button>
+                    <button className="chat-bot-button" onClick={toggleChatbot}>Open Chatbot</button>
             {showChatbot && (
                 <Chatbot
                     config={chatbotConfig}
+                    actionProvider={ActionProvider}
+                    messageParser={MessageParser}
                     style={{
                         position: 'absolute',
                         bottom: '20px',
@@ -208,18 +191,6 @@ const HomePage = () => {
             <div className="content-container">
                 <div className="section">
                     <h1 style={{ textAlign: 'center', fontWeight:'bold' }}>All Plans</h1>
-                    <div className="card-container">
-                        {plans.map((plan, index) => (
-                            <div key={index} className="card">
-                                <img className="card-image" src={plan.link_to_map} alt="" />
-                                <h2>{plan.name}</h2>
-                                <p><strong>Destination:</strong> {plan.destination}</p>
-                                <button onClick={() => handlePlanJoin(plan)}>Join Now</button>
-                                <button onClick={() => openModal(plan)}>View Plans</button>
-                            </div>
-                        ))}
-                    </div>
-                    <h1 style={{ textAlign: 'center', fontWeight:'bold' }}>Created Plans <button onClick={() => openCreateModal()}>+</button></h1>
                     <div className="card-container">
                         {plans.map((plan, index) => (
                             <div key={index} className="card">
@@ -253,7 +224,7 @@ const HomePage = () => {
                             <p className="modal-card"><strong>Status:</strong> {selectedPlan.status}</p>
                         </div>
                         <p className="modal-card-preference"><strong>Preference:</strong>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse sapiente et quod fugiat illo quam eius at laborum excepturi officiis accusantium blanditiis repellat magnam doloribus nulla commodi, molestiae rem. Perferendis!</p>
-                        <img src={selectedPlan.link_to_map} alt="Destination" className="modal-image" />
+                        <img src={imageUrl} alt="Destination" className="modal-image" />
                         <div className="map-container">
                             <MapWithSearch searchTerm={selectedPlan.destination} />
                         </div>
@@ -281,9 +252,9 @@ const HomePage = () => {
                             changeMap(event);
                         }}
                         placeholder='Destination' />
-                        <input type="text" className="modal-card" name="preference" onChange={handleInputChange} placeholder='Preference' />
+                        {/* <input type="text" className="modal-card" name="preference" onChange={handleInputChange} placeholder='Preference' /> */}
                         <input type="text" className="modal-card" name="source" onChange={handleInputChange} placeholder='Source' />
-                        <input type="text" className="modal-card" name="status" onChange={handleInputChange} placeholder='Status' />
+                        {/* <input type="text" className="modal-card" name="status" onChange={handleInputChange} placeholder='Status' /> */}
                         <input type="text" className="modal-card" name="name" onChange={handleInputChange} placeholder='Name'/>
                         <button type="submit" onClick={handleCreatePlan} className="modal-card">Create</button>
                     </div>

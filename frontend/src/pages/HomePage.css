@@ -35,6 +35,22 @@
   gap: 8px;
 }
 
+.chat-bot-button{
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  gap: 8px;
+  margin-left: 55%;
+}
+.chat-bot-button:hover {
+  background-color: #0067cc;
+}
+
 .header-button {
   background-color: #007bff;
   color: #fff;

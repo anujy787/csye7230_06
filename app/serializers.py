@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, TravelPlan
+from .models import User, TravelPlan, Trip
 import bcrypt
 
 
@@ -41,6 +41,7 @@ class TravelPlanSerializer(serializers.ModelSerializer):
         fields = [
             "plan_id",
             "created_by",
+            "user_uuid",
             "planned_date",
             "name",
             "source",
@@ -51,9 +52,15 @@ class TravelPlanSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             "created_at": {"read_only": True},
+            "plan_id": {"read_only": True},
         }
 
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        ret.pop("created_by", None)
-        return ret
+
+class TripSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trip
+        fields = [
+            "plan",
+            "user",
+            "status",
+        ]

@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer, TravelPlanSerializer
-from .models import User, TravelPlan, VerificationToken
+from .serializers import UserSerializer, TravelPlanSerializer, TripSerializer
+from .models import User, TravelPlan, VerificationToken, Trip
 import bcrypt
 from rest_framework.authentication import BaseAuthentication
 import base64
@@ -15,6 +15,7 @@ from django.conf import settings
 # from django.core.mail import send_mail
 import re
 from django.utils.dateparse import parse_datetime
+from mailing import send_trip_invite
 
 
 # Create your views here.
@@ -106,7 +107,7 @@ class LoginView(APIView):
             serializer = UserSerializer(user)
             return Response(data=serializer.data)
         elif user.is_verified == False:
-            raise AuthenticationFailed("User not validated!")
+            raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
         else:
             raise AuthenticationFailed("User not authenticated!")
 
@@ -152,7 +153,7 @@ class LoginView(APIView):
                 {"message": "User details updated successfully!"}, status=204
             )
         elif user.is_verified == False:
-            raise AuthenticationFailed("User not Validated!")
+            raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
         else:
             raise AuthenticationFailed("User not authenticated!")
 
@@ -171,10 +172,11 @@ class TravelPlanCreateView(APIView):
 
         user = request.user
 
-        if user.is_authenticated:
+        if user.is_authenticated and user.is_verified:
 
             plan_data = {
-                "created_by": request.user.id,
+                "created_by": user.first_name + " " + user.last_name,
+                "user_uuid": user.id,
                 "planned_date": request.data.get("planned_date"),
                 "name": request.data.get("name"),
                 "source": request.data.get("source"),
@@ -199,6 +201,10 @@ class TravelPlanCreateView(APIView):
                 return Response(serializer.data, status=201)
             else:
                 return Response(serializer.errors, status=400)
+        elif user.is_verified == False:
+            raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
+        else:
+            raise AuthenticationFailed("User not authenticated!")
 
     def handle_bad_request(self):
         return Response({"error": "Bad Request"}, status=400)
@@ -229,10 +235,12 @@ class TravelPlanUpdateView(APIView):
         if request.data:
             return Response({"error": "Request body not allowed"}, status=400)
 
-        if user.is_authenticated:
-            plans = TravelPlan.objects.filter(created_by=user.id)
+        if user.is_authenticated and user.is_verified:
+            plans = TravelPlan.objects.filter(user_uuid=user.id)
             serializer = TravelPlanSerializer(plans, many=True)
             return Response(serializer.data)
+        elif user.is_verified == False:
+            raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
         else:
             raise AuthenticationFailed("User not authenticated!")
 
@@ -264,10 +272,12 @@ class AllTravelPlansView(APIView):
         if request.query_params:
             return Response({"error": "Query parameters not allowed"}, status=400)
 
-        if user.is_authenticated:
+        if user.is_authenticated and user.is_verified:
             plans = TravelPlan.objects.all()
             serializer = TravelPlanSerializer(plans, many=True)
             return Response(serializer.data)
+        elif user.is_verified == False:
+            raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
         else:
             raise AuthenticationFailed("User not authenticated!")
 
@@ -285,3 +295,26 @@ class AllTravelPlansView(APIView):
 
     def options(self, request, *args, **kwargs):
         return Response(status=405, headers={"Allow": "GET"})
+
+
+class AddTripView(APIView):
+    authentication_classes = [BasicAuthHeaderAuthentication]
+
+    def post(self, request):
+        if request.query_params:
+            return Response({"error": "Query parameters not allowed"})
+
+        user = request.user
+
+        if user.is_authenticated and user.is_verified:
+            plans = TravelPlan.objects.filter(plan_id=request.data["plan"])
+            travel_serializer = TravelPlanSerializer(plans, many=True)
+            send_trip_invite(user, travel_serializer.data)
+            trip_serializer = TripSerializer(data=request.data)
+            trip_serializer.is_valid(raise_exception=True)
+            trip_serializer.save()
+            return Response(trip_serializer.data)
+        elif user.is_verified == False:
+            raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
+        else:
+            raise AuthenticationFailed("User not authenticated!")

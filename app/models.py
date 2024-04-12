@@ -31,8 +31,8 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=25)
+    last_name = models.CharField(max_length=25)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     account_created = models.DateTimeField(auto_now_add=True)
@@ -89,7 +89,8 @@ class VerificationToken(models.Model):
 
 class TravelPlan(models.Model):
     plan_id = models.AutoField(primary_key=True)
-    created_by = models.UUIDField(blank=True)
+    created_by = models.CharField(max_length=50)
+    user_uuid = models.UUIDField()
     planned_date = models.DateField(null=False)
     name = models.CharField(max_length=120, null=False)
     source = models.CharField(max_length=255, blank=True)
@@ -130,6 +131,7 @@ class Trip(models.Model):
 
     class Meta:
         db_table = "trips"
+        unique_together = ("plan", "user")
 
     def __str__(self):
         return f"{self.plan.name} - {self.status}"

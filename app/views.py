@@ -15,8 +15,8 @@ from django.conf import settings
 # from django.core.mail import send_mail
 import re
 from django.utils.dateparse import parse_datetime
-
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # Create your views here.
 
@@ -31,6 +31,15 @@ def login(request):
 
 
 class RegisterView(APIView):
+    @swagger_auto_schema(
+        request_body=UserSerializer,
+        responses={
+            201: "Successful registration. Returns user data.",
+            400: "Bad request. Check request data.",
+        },
+        operation_summary="Register new user",
+        operation_description="Register a new user with email verification.",
+    )
     def post(self, request):
         if request.query_params:
             return Response({"error": "Query parameters not allowed"})
@@ -42,21 +51,50 @@ class RegisterView(APIView):
             print("Mail Not Sent Since Env is : CI")
         else:
             from mailing import send_verification_email
+
             send_verification_email(request.data.get("email"), verification_token)
         return Response(serializer.data, status=201)
 
     def handle_bad_request(self):
         return Response({"error": "Bad Request"}, status=400)
 
+    @swagger_auto_schema(
+        responses={
+            400: "Bad request. This endpoint does not support GET requests.",
+        },
+        operation_summary="Handle bad request",
+        operation_description="This endpoint does not support GET requests.",
+    )
     def get(self, request):
         return self.handle_bad_request()
 
+    @swagger_auto_schema(
+        responses={
+            400: "Bad request. This endpoint does not support PUT requests.",
+        },
+        operation_summary="Handle bad request",
+        operation_description="This endpoint does not support PUT requests.",
+    )
     def put(self, request):
         return self.handle_bad_request()
 
+    @swagger_auto_schema(
+        responses={
+            400: "Bad request. This endpoint does not support DELETE requests.",
+        },
+        operation_summary="Handle bad request",
+        operation_description="This endpoint does not support DELETE requests.",
+    )
     def delete(self, request):
         return self.handle_bad_request()
 
+    @swagger_auto_schema(
+        responses={
+            405: "Method not allowed. Only GET method is supported.",
+        },
+        operation_summary="Handle method not allowed",
+        operation_description="Only GET method is supported for this endpoint.",
+    )
     def options(self, request, *args, **kwargs):
         return Response(status=405, headers={"Allow": "GET"})
 
@@ -94,6 +132,14 @@ class BasicAuthHeaderAuthentication(BaseAuthentication):
 class LoginView(APIView):
     authentication_classes = [BasicAuthHeaderAuthentication]
 
+    @swagger_auto_schema(
+        operation_summary="Get user details",
+        operation_description="Retrieve authenticated user details if user is verified.",
+        responses={
+            200: "User details retrieved successfully.",
+            401: "User not authenticated or not verified.",
+        },
+    )
     def get(self, request):
         user = request.user
 
@@ -111,17 +157,61 @@ class LoginView(APIView):
         else:
             raise AuthenticationFailed("User not authenticated!")
 
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "first_name": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="First name of the user"
+                ),
+                "last_name": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="Last name of the user"
+                ),
+                "username": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="Username of the user"
+                ),
+                "bio": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="User biography"
+                ),
+                "is_subscribed": openapi.Schema(
+                    type=openapi.TYPE_BOOLEAN, description="Subscription status"
+                ),
+                "password": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_PASSWORD,
+                    description="User password",
+                ),
+            },
+            required=["first_name", "last_name", "username", "password"],
+        ),
+        operation_summary="Update user details",
+        operation_description="Update authenticated user details if user is verified.",
+        responses={
+            204: "User details updated successfully.",
+            400: "Bad request. Check request data.",
+            401: "User not authenticated or not verified.",
+        },
+    )
     def put(self, request):
         user = request.user
 
         if user.is_authenticated and user.is_verified:
             data = request.data
 
-            allowed_fields = ["first_name", "last_name", "password", "username", "bio", "is_subscribed"]
+            allowed_fields = [
+                "first_name",
+                "last_name",
+                "password",
+                "username",
+                "bio",
+                "is_subscribed",
+            ]
             for field in allowed_fields:
                 if field in data:
                     if isinstance(data[field], str) and not data[field].strip():
-                        return Response({"error": f"{field} cannot be blank"}, status=400)
+                        return Response(
+                            {"error": f"{field} cannot be blank"}, status=400
+                        )
                     elif isinstance(data[field], bool):
                         setattr(user, field, data[field])
                     else:
@@ -157,7 +247,13 @@ class LoginView(APIView):
         else:
             raise AuthenticationFailed("User not authenticated!")
 
-
+    @swagger_auto_schema(
+        responses={
+            405: "Method not allowed. Only GET method is supported.",
+        },
+        operation_summary="Handle method not allowed",
+        operation_description="Only GET method is supported for this endpoint.",
+    )
     def options(self, request, *args, **kwargs):
         return Response(status=405, headers={"Allow": "GET"})
 
@@ -165,8 +261,62 @@ class LoginView(APIView):
 class TravelPlanCreateView(APIView):
     authentication_classes = [BasicAuthHeaderAuthentication]
 
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "planned_date": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_DATE,
+                    description="Planned date of the travel plan (YYYY-MM-DD)",
+                ),
+                "name": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="Name of the travel plan"
+                ),
+                "source": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Source location of the travel plan",
+                ),
+                "destination": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Destination location of the travel plan",
+                ),
+                "preference": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Preference for the travel plan",
+                ),
+                "status": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Status of the travel plan",
+                    enum=["new", "approved", "rejected"],
+                ),
+                "link_to_map": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Link to map for the travel plan",
+                ),
+                "created_at": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_DATETIME,
+                    description="Creation timestamp of the travel plan (optional)",
+                ),
+                "updated_at": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_DATETIME,
+                    description="Update timestamp of the travel plan (optional)",
+                ),
+            },
+            required=["planned_date", "name", "source", "destination"],
+        ),
+        operation_summary="Create a new travel plan",
+        operation_description="Create a new travel plan with specified details.",
+        responses={
+            201: "Travel plan created successfully.",
+            400: "Bad request. Check request data.",
+            401: "User not authenticated or not verified.",
+        },
+    )
     def post(self, request):
-        
+
         if request.query_params:
             return Response({"error": "Query parameters not allowed"}, status=400)
 
@@ -209,15 +359,46 @@ class TravelPlanCreateView(APIView):
     def handle_bad_request(self):
         return Response({"error": "Bad Request"}, status=400)
 
+    @swagger_auto_schema(
+        responses={
+            400: "Bad request. This endpoint does not support GET requests.",
+            401: "User not authenticated or not verified.",
+        },
+        operation_summary="Handle bad request",
+        operation_description="This endpoint does not support GET requests.",
+    )
     def get(self, request):
         return self.handle_bad_request()
 
+    @swagger_auto_schema(
+        responses={
+            400: "Bad request. This endpoint does not support PUT requests.",
+            401: "User not authenticated or not verified.",
+        },
+        operation_summary="Handle bad request",
+        operation_description="This endpoint does not support PUT requests.",
+    )
     def put(self, request):
         return self.handle_bad_request()
 
+    @swagger_auto_schema(
+        responses={
+            400: "Bad request. This endpoint does not support DELETE requests.",
+            401: "User not authenticated or not verified.",
+        },
+        operation_summary="Handle bad request",
+        operation_description="This endpoint does not support DELETE requests.",
+    )
     def delete(self, request):
         return self.handle_bad_request()
 
+    @swagger_auto_schema(
+        responses={
+            405: "Method not allowed. Only GET method is supported.",
+        },
+        operation_summary="Handle method not allowed",
+        operation_description="Only GET method is supported for this endpoint.",
+    )
     def options(self, request, *args, **kwargs):
         return Response(status=405, headers={"Allow": "GET"})
 
@@ -225,6 +406,15 @@ class TravelPlanCreateView(APIView):
 class TravelPlanUpdateView(APIView):
     authentication_classes = [BasicAuthHeaderAuthentication]
 
+    @swagger_auto_schema(
+        responses={
+            200: "List of travel plans retrieved successfully.",
+            400: "Bad request. Check request data.",
+            401: "User not authenticated or not verified.",
+        },
+        operation_summary="Get user's travel plans",
+        operation_description="Retrieve authenticated user's travel plans if user is verified.",
+    )
     def get(self, request):
 
         user = request.user
@@ -244,6 +434,70 @@ class TravelPlanUpdateView(APIView):
         else:
             raise AuthenticationFailed("User not authenticated!")
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "pk",
+                openapi.IN_PATH,
+                type=openapi.TYPE_INTEGER,
+                description="ID of the travel plan to update",
+                required=True,
+            ),
+        ],
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "planned_date": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_DATE,
+                    description="Updated planned date of the travel plan (YYYY-MM-DD)",
+                ),
+                "name": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Updated name of the travel plan",
+                ),
+                "source": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Updated source location of the travel plan",
+                ),
+                "destination": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Updated destination location of the travel plan",
+                ),
+                "preference": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Updated preference for the travel plan",
+                ),
+                "status": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Updated status of the travel plan",
+                    enum=["new", "approved", "rejected"],
+                ),
+                "link_to_map": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Updated link to map for the travel plan",
+                ),
+                "created_at": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_DATETIME,
+                    description="Updated creation timestamp of the travel plan (optional)",
+                ),
+                "updated_at": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_DATETIME,
+                    description="Updated update timestamp of the travel plan (optional)",
+                ),
+            },
+            required=["planned_date", "name", "source", "destination"],
+        ),
+        responses={
+            200: "Travel plan updated successfully.",
+            400: "Bad request. Check request data.",
+            404: "Travel plan not found.",
+        },
+        operation_summary="Update a travel plan",
+        operation_description="Update an existing travel plan with specified details.",
+    )
     def put(self, request, pk):
         try:
             travel_plan = TravelPlan.objects.get(pk=pk)
@@ -259,6 +513,13 @@ class TravelPlanUpdateView(APIView):
         else:
             return Response(serializer.errors, status=400)
 
+    @swagger_auto_schema(
+        responses={
+            405: "Method not allowed. Only GET and PUT methods are supported.",
+        },
+        operation_summary="Handle method not allowed",
+        operation_description="Only GET and PUT methods are supported for this endpoint.",
+    )
     def delete(self, request):
         pass
 
@@ -266,6 +527,15 @@ class TravelPlanUpdateView(APIView):
 class AllTravelPlansView(APIView):
     authentication_classes = [BasicAuthHeaderAuthentication]
 
+    @swagger_auto_schema(
+        responses={
+            200: "List of all travel plans retrieved successfully.",
+            400: "Bad request. Query parameters not allowed.",
+            401: "User not authenticated or not verified.",
+        },
+        operation_summary="Get all travel plans",
+        operation_description="Retrieve all travel plans if user is authenticated and verified.",
+    )
     def get(self, request):
         user = request.user
 
@@ -284,22 +554,73 @@ class AllTravelPlansView(APIView):
     def handle_bad_request(self):
         return Response({"error": "Bad Request"}, status=400)
 
+    @swagger_auto_schema(
+        responses={
+            400: "Bad request. This endpoint does not support POST requests.",
+            401: "User not authenticated or not verified.",
+        },
+        operation_summary="Handle bad request",
+        operation_description="This endpoint does not support POST requests.",
+    )
     def post(self, request):
         return self.handle_bad_request()
 
+    @swagger_auto_schema(
+        responses={
+            400: "Bad request. This endpoint does not support PUT requests.",
+            401: "User not authenticated or not verified.",
+        },
+        operation_summary="Handle bad request",
+        operation_description="This endpoint does not support PUT requests.",
+    )
     def put(self, request):
         return self.handle_bad_request()
 
+    @swagger_auto_schema(
+        responses={
+            400: "Bad request. This endpoint does not support DELETE requests.",
+            401: "User not authenticated or not verified.",
+        },
+        operation_summary="Handle bad request",
+        operation_description="This endpoint does not support DELETE requests.",
+    )
     def delete(self, request):
         return self.handle_bad_request()
 
+    @swagger_auto_schema(
+        responses={
+            405: "Method not allowed. Only GET method is supported.",
+        },
+        operation_summary="Handle method not allowed",
+        operation_description="Only GET method is supported for this endpoint.",
+    )
     def options(self, request, *args, **kwargs):
         return Response(status=405, headers={"Allow": "GET"})
 
 
-class AddTripView(APIView):
+class AddUserToPlanView(APIView):
     authentication_classes = [BasicAuthHeaderAuthentication]
 
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "plan": openapi.Schema(
+                    type=openapi.TYPE_INTEGER,
+                    description="ID of the travel plan to add trip to",
+                ),
+            },
+            required=["plan"],
+        ),
+        responses={
+            200: "Trip added successfully.",
+            400: "Bad request. Check request data.",
+            401: "User not authenticated or not verified.",
+            404: "Travel plan does not exist.",
+        },
+        operation_summary="Add trip to a travel plan",
+        operation_description="Add a trip to an existing travel plan.",
+    )
     def post(self, request):
         if request.query_params:
             return Response({"error": "Query parameters not allowed"})
@@ -321,11 +642,50 @@ class AddTripView(APIView):
                 print("Mail Not Sent Since Env is : CI")
             else:
                 from mailing import send_trip_invite
-                send_trip_invite(owner_email, plan_name, user.email, plan_id, req_user_id)
+
+                send_trip_invite(
+                    owner_email, plan_name, user.email, plan_id, req_user_id
+                )
             trip_serializer = TripSerializer(data=data)
             trip_serializer.is_valid(raise_exception=True)
             trip_serializer.save()
             return Response(trip_serializer.data)
+        elif user.is_verified == False:
+            raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
+        else:
+            raise AuthenticationFailed("User not authenticated!")
+
+    def get(self, request):
+        if request.query_params:
+            return Response({"error": "Query parameters not allowed"})
+
+        user = request.user
+
+        if user.is_authenticated and user.is_verified:
+
+            plans = Trip.objects.filter(user=user.id)
+            serializer = TripSerializer(plans, many=True)
+            return Response(serializer.data)
+        elif user.is_verified == False:
+            raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
+        else:
+            raise AuthenticationFailed("User not authenticated!")
+
+
+class AllTripViews(APIView):
+    authentication_classes = [BasicAuthHeaderAuthentication]
+
+    def get(self, request):
+        if request.query_params:
+            return Response({"error": "Query parameters not allowed"})
+
+        user = request.user
+
+        if user.is_authenticated and user.is_verified:
+
+            plans = Trip.objects.all()
+            serializer = TripSerializer(plans, many=True)
+            return Response(serializer.data)
         elif user.is_verified == False:
             raise AuthenticationFailed("User not Validated. Please Check Your Mail!")
         else:

@@ -10,9 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      MYSQL_USER : ${{ secrets.MYSQL_USER }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-      MYSQL_DATABASE : ${{ secrets.MYSQL_DATABASE }}
+      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
 
     steps:
       - name: Checkout code
@@ -36,6 +36,12 @@ jobs:
         run: |
           python manage.py migrate
 
-      - name: Run Tests
+      - name: Run UserRegistrationTests
         run: |
           python manage.py test app.tests.UserRegistrationTest
+
+      - name: Run TravelPlanModelTest
+        run: python manage.py test app.tests.TravelPlanModelTest
+
+      - name: Run TripModelTest
+        run: python manage.py test app.tests.TripModelTest

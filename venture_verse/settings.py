@@ -108,7 +108,7 @@ else:
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
+        "ENGINE":  "mysql.connector.django",
         "NAME": db_name,
         "USER": db_user,
         "PASSWORD": db_password,

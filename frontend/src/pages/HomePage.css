@@ -124,3 +124,114 @@
   height: 70vh;
   overflow-y: auto;
 }
+
+
+.plan-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  height: 80vh;
+  width: 80vw;
+  overflow-y: auto;
+  z-index: 11;
+}
+
+.plan-modal button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.plan-modal button:hover {
+  background-color: #0056b3;
+}
+
+.plan-modal h2 {
+  margin-bottom: 10px;
+}
+
+.plan-modal p {
+  margin-bottom: 5px;
+}
+
+.plan-modal strong {
+  font-weight: bold;
+}
+
+.modal-image {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  width: 40vh; /* Adjust the width of the cropped image */
+  height: 40vh; /* Adjust the height of the cropped image */
+  object-fit: cover; /* Crop the image to fit the square window */
+  border-radius: 8px;
+}
+
+/* moadal cards */
+
+.modal-card-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  width: 40vw;
+}
+
+.modal-card {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.modal-card p {
+  margin-bottom: 8px;
+}
+
+.modal-card button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.modal-card button:hover {
+  background-color: #45a049;
+}
+
+/* preference card */
+
+.modal-card-preference {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+  width: 37.6vw;
+}
+
+.modal-card-preference h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.modal-card-preference p {
+  margin-bottom: 8px;
+}

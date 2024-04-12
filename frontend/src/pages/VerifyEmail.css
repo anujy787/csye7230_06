@@ -1,0 +1,36 @@
+
+.verify-email-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20vh;
+    width: 80vw;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+  }
+  
+  /* Style for the text */
+  .verify-email-text {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .verify-email-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .verify-email-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .verify-email-button:focus {
+    outline: none;
+  }

@@ -116,10 +116,15 @@ class LoginView(APIView):
         if user.is_authenticated and user.is_verified:
             data = request.data
 
-            allowed_fields = ["first_name", "last_name", "password", "username", "bio"]
+            allowed_fields = ["first_name", "last_name", "password", "username", "bio", "is_subscribed"]
             for field in allowed_fields:
-                if field in data and not data[field].strip():
-                    return Response({"error": f"{field} cannot be blank"}, status=400)
+                if field in data:
+                    if isinstance(data[field], str) and not data[field].strip():
+                        return Response({"error": f"{field} cannot be blank"}, status=400)
+                    elif isinstance(data[field], bool):
+                        setattr(user, field, data[field])
+                    else:
+                        setattr(user, field, data[field])
 
             for field in data:
                 if field not in allowed_fields:
@@ -133,6 +138,8 @@ class LoginView(APIView):
                     user.username = data["username"]
                 elif field == "bio":
                     user.bio = data["bio"]
+                elif field == "is_subscribed":
+                    user.is_subscribed = bool(data["is_subscribed"])
                 elif field == "password":
                     hashed_password = bcrypt.hashpw(
                         data["password"].encode("utf-8"), bcrypt.gensalt()
@@ -148,6 +155,7 @@ class LoginView(APIView):
             raise AuthenticationFailed("User not Validated!")
         else:
             raise AuthenticationFailed("User not authenticated!")
+
 
     def options(self, request, *args, **kwargs):
         return Response(status=405, headers={"Allow": "GET"})

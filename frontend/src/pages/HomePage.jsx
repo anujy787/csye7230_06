@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
 import Modal from 'react-modal';
 import MapWithSearch from './MapWithSearch';
+import Chatbot from 'react-chatbot-kit';
+import 'react-chatbot-kit/build/main.css'; // Import chatbot styling
+import chatbotConfig from '../chatbotConfig'; // Adjust the path as necessary
+
 
 Modal.setAppElement('#root');
 
@@ -137,6 +141,13 @@ const HomePage = () => {
         setCreatelocation(e.target.value);
     };
 
+    const [showChatbot, setShowChatbot] = useState(false);
+
+    const toggleChatbot = () => {
+        setShowChatbot(!showChatbot);
+    };
+      
+
     return (
         <div className="container">
             <div className="header-container">
@@ -154,7 +165,22 @@ const HomePage = () => {
                         <button className="header-button" onClick={() => navigate('/contactus')}>Contact Us</button>
                     </div>
                 </header>
+                <div>
+                    <button className="header-button" onClick={toggleChatbot}>Open Chatbot</button>
+            {showChatbot && (
+                <Chatbot
+                    config={chatbotConfig}
+                    style={{
+                        position: 'absolute',
+                        bottom: '20px',
+                        right: '20px',
+                        zIndex: '9999', // Ensure the chatbot is on top of other elements
+                    }}
+                />
+                )}
+                    </div>
             </div>
+            
             <div className="image-container">
                 <img src={require('../assets/vverse-logo.png')} alt="VVerse Logo" className="full-width-image" />
             </div>
@@ -175,6 +201,7 @@ const HomePage = () => {
                 </div>
             </div>
             <button onClick={handleHealthCheck}>Server Health Check</button>
+            
 
             <Modal
                 isOpen={modalOpen}

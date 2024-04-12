@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Subscription.css';
+import axios from 'axios';
 
 const SubscriptionPage = () => {
   const [selectedTier, setSelectedTier] = useState(null);
@@ -31,8 +32,19 @@ const SubscriptionPage = () => {
     },
   ];
 
-  const handleAction = (tierId) => {
+  const handleAction = async (tierId) => {
     console.log(`Perform action for tier ${tierId}`);
+    if (tierId === 1) {
+      try {
+        await axios.put('http://127.0.0.1:8000/v1/user/self', { is_subscribed: true }, {
+          // Add your authentication headers here
+        });
+        console.log('User subscribed successfully.');
+        window.location.href = '/'
+      } catch (error) {
+        console.error('Error subscribing user:', error);
+      }
+    }
   };
 
   return (

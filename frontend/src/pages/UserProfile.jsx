@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
 import axios from 'axios';
 import defaultAvatar from '../assets/user.png';
+import { useNavigate } from 'react-router-dom';
 
 const StarRating = ({ rating }) => {
   const numStars = Math.round(parseFloat(rating));
@@ -17,9 +18,11 @@ const StarRating = ({ rating }) => {
 };
 
 const UserProfile = () => {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const auth = JSON.parse(sessionStorage.getItem('auth'));
   const isLoggedIn = auth && auth.username && auth.password;
   
@@ -39,6 +42,7 @@ const UserProfile = () => {
       });
       setUserData(response.data);
       setEditedData(response.data); // Initialize edited data with fetched user data
+      setIsSubscribed(response.data.is_subscribed);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -124,7 +128,9 @@ const UserProfile = () => {
           <button onClick={handleSave}>Save</button>
         </div>
       )}
+      {!isSubscribed && <button onClick={() => navigate('/subscription')}>Subscribe</button>}
     </div>
+    
   );
 };
 

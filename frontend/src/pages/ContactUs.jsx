@@ -27,29 +27,29 @@ const ContactUs = () => {
         <div className="form-section">
           <h2>Send Us a Message</h2>
           <form>
-          <div className="form-group">
-            <input
-              type="text"
-              placeholder="Name"
-              required
-              className="contact-input"
-            />
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="Name"
+                required
+                className="contact-input"
+              />
             </div>
             <div className="form-group">
-            <input
-              type="email"
-              placeholder="Email"
-              required
-              className="contact-input"
-            />
+              <input
+                type="email"
+                placeholder="Email"
+                required
+                className="contact-input"
+              />
             </div>
             <div className="form-group">
-            <textarea
-              placeholder="Message"
-              rows="5"
-              required
-              className="contact-input"
-            ></textarea>
+              <textarea
+                placeholder="Message"
+                rows="5"
+                required
+                className="contact-input"
+              ></textarea>
             </div>
             <button type="submit" className="contact-button">
               Submit

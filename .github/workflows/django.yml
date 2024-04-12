@@ -36,7 +36,7 @@ jobs:
         run: |
           python manage.py migrate
 
-      - name: Run Tests
+      - name: Run UserRegistrationTests
         run: |
           python manage.py test app.tests.UserRegistrationTest
 

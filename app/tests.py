@@ -232,7 +232,6 @@ class TravelPlanModelTest(TestCase):
         self.assertEqual(str(plan), self.plan_data["name"])
 
 
-
 class TripModelTest(TestCase):
     def setUp(self):
         User = get_user_model()

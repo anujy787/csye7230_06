@@ -10,9 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      MYSQL_USER : ${{ secrets.MYSQL_USER }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-      MYSQL_DATABASE : ${{ secrets.MYSQL_DATABASE }}
+      MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
 
     steps:
       - name: Checkout code
@@ -39,4 +39,9 @@ jobs:
       - name: Run Tests
         run: |
           python manage.py test app.tests.UserRegistrationTest
-          python manage.py test app.tests.TravelPlanCreationTest
+
+      - name: Run TravelPlanModelTest
+        run: python manage.py test app.tests.TravelPlanModelTest
+
+      - name: Run TripModelTest
+        run: python manage.py test app.tests.TripModelTest

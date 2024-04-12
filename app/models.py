@@ -112,7 +112,7 @@ class TravelPlan(models.Model):
     created_by = models.CharField(
         max_length=50, help_text="User who created the travel plan"
     )
-    user_uuid = models.UUIDField(
+    user_uuid = models.UUIDField(null=True,
         help_text="UUID of the user associated with the travel plan"
     )
     planned_date = models.DateField(

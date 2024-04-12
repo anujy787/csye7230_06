@@ -15,7 +15,7 @@ from django.conf import settings
 # from django.core.mail import send_mail
 import re
 from django.utils.dateparse import parse_datetime
-from mailing import send_trip_invite
+
 
 
 # Create your views here.
@@ -321,7 +321,7 @@ class AddTripView(APIView):
                 print("Mail Not Sent Since Env is : CI")
             else:
                 from mailing import send_trip_invite
-            send_trip_invite(owner_email, plan_name, user.email, plan_id, req_user_id)
+                send_trip_invite(owner_email, plan_name, user.email, plan_id, req_user_id)
             trip_serializer = TripSerializer(data=data)
             trip_serializer.is_valid(raise_exception=True)
             trip_serializer.save()

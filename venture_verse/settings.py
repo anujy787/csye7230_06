@@ -186,7 +186,6 @@ CORS_ORIGIN_WHITELIST = ["http://localhost:3000"]
 CORS_ORIGIN_ALLOW_ALL = True
 
 
-
 # you can go in the Applications folder and expand the Python 3.9 folder. Now first run (or double click) the Install Certificates.command and then Update Shell Profile.command
 
 

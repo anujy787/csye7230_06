@@ -15,7 +15,6 @@ from django.contrib.auth import get_user_model
 logger = setup_logger()
 
 
-
 # class TravelPlanCreationTest(TestCase):
 #     def setUp(self):
 #         self.client = APIClient()
@@ -66,17 +65,6 @@ logger = setup_logger()
 #         updated_data = {"name": "Updated Travel Plan"}
 #         response = self.client.put(reverse("cloud:update-travel-plan", args=[plan_id]), data=updated_data)
 #         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-
-
-    
-        
-
-
-        
-
-
-
 
 
 class UserRegistrationTest(TestCase):
@@ -205,7 +193,9 @@ class TravelPlanModelTest(TestCase):
         self.plan_data = {
             "created_by": "John Doe",
             "user_uuid": "123e4567-e89b-12d3-a456-426614174000",
-            "planned_date": datetime.strptime("2024-05-01", "%Y-%m-%d"),  # Convert string to datetime
+            "planned_date": datetime.strptime(
+                "2024-05-01", "%Y-%m-%d"
+            ),  # Convert string to datetime
             "name": "Summer Vacation",
             "source": "New York",
             "destination": "Los Angeles",
@@ -219,7 +209,10 @@ class TravelPlanModelTest(TestCase):
         self.assertIsNotNone(plan)
         self.assertEqual(plan.created_by, self.plan_data["created_by"])
         self.assertEqual(plan.user_uuid, self.plan_data["user_uuid"])
-        self.assertEqual(plan.planned_date.strftime("%Y-%m-%d"), self.plan_data["planned_date"].strftime("%Y-%m-%d"))  # Convert planned_date to string
+        self.assertEqual(
+            plan.planned_date.strftime("%Y-%m-%d"),
+            self.plan_data["planned_date"].strftime("%Y-%m-%d"),
+        )  # Convert planned_date to string
         self.assertEqual(plan.name, self.plan_data["name"])
         self.assertEqual(plan.source, self.plan_data["source"])
         self.assertEqual(plan.destination, self.plan_data["destination"])
@@ -236,30 +229,30 @@ class TripModelTest(TestCase):
     def setUp(self):
         User = get_user_model()
         self.user = User.objects.create(
-            email='test@example.com',
-            first_name='Test',
-            last_name='User',
-            password='password'
+            email="test@example.com",
+            first_name="Test",
+            last_name="User",
+            password="password",
         )
         self.plan = TravelPlan.objects.create(
-            created_by='John Doe',
+            created_by="John Doe",
             user_uuid=self.user.id,
-            planned_date='2024-05-01',
-            name='Summer Vacation',
-            source='New York',
-            destination='Los Angeles',
-            preference='None',
-            status='new',
-            link_to_map='https://maps.example.com'
+            planned_date="2024-05-01",
+            name="Summer Vacation",
+            source="New York",
+            destination="Los Angeles",
+            preference="None",
+            status="new",
+            link_to_map="https://maps.example.com",
         )
 
     def test_create_trip(self):
-        trip = Trip.objects.create(plan=self.plan, user=self.user, status='Requested')
+        trip = Trip.objects.create(plan=self.plan, user=self.user, status="Requested")
         self.assertIsNotNone(trip)
         self.assertEqual(trip.plan, self.plan)
         self.assertEqual(trip.user, self.user)
-        self.assertEqual(trip.status, 'Requested')
+        self.assertEqual(trip.status, "Requested")
 
     def test_string_representation(self):
-        trip = Trip.objects.create(plan=self.plan, user=self.user, status='Requested')
+        trip = Trip.objects.create(plan=self.plan, user=self.user, status="Requested")
         self.assertEqual(str(trip), f"{self.plan.name} - Requested")

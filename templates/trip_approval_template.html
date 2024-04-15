@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Approval Request</title>
+    <style>
+        body {{
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            color: #333;
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+        }}
+        p {{
+            margin: 16px 0;
+        }}
+        .button-container {{
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }}
+        .button {{
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 8px;
+            background-color: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }}
+        .button.reject {{
+            background-color: #F44336;
+        }}
+        .button:hover {{
+            background-color: #0D47A1;
+        }}
+        .button.reject:hover {{
+            background-color: #B71C1C;
+        }}
+    </style>
+</head>
+<body>
+    <p>Hello, {{owner}}</p>
+    <p>You have a trip awaiting approval from {{user}}:</p>
+    <p><strong>Trip Name:</strong> {{plan}}</p>
+    <div class="button-container">
+        <a href="{{accept_url}}" class="button">Accept</a>
+        <a href="{{reject_url}}" class="button reject">Reject</a>
+    </div>
+</body>
+</html>
